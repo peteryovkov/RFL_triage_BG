@@ -70,6 +70,40 @@
       margin-top: 2px;
     }
 
+    /* ── Language toggle bar ── */
+    .lang-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-btn {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1.5px solid #cbd5e1;
+      background: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--slate);
+      transition: all 0.15s;
+      line-height: 1.3;
+    }
+
+    .lang-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .lang-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
     .privacy-banner {
       background: #fff1f2;
       border-bottom: 1px solid #fecdd3;
@@ -237,28 +271,13 @@
       border-left: 6px solid;
     }
 
-    .tier-1 {
-      background: var(--red-light);
-      border-color: var(--red);
-    }
+    .tier-1 { background: var(--red-light); border-color: var(--red); }
     .tier-1 .tier-label { color: var(--red); }
-
-    .tier-2 {
-      background: var(--blue-light);
-      border-color: var(--blue);
-    }
+    .tier-2 { background: var(--blue-light); border-color: var(--blue); }
     .tier-2 .tier-label { color: var(--blue); }
-
-    .tier-3 {
-      background: var(--amber-light);
-      border-color: var(--amber);
-    }
+    .tier-3 { background: var(--amber-light); border-color: var(--amber); }
     .tier-3 .tier-label { color: #b45309; }
-
-    .tier-4 {
-      background: var(--slate-light);
-      border-color: var(--slate);
-    }
+    .tier-4 { background: var(--slate-light); border-color: var(--slate); }
     .tier-4 .tier-label { color: var(--slate); }
 
     .tier-label {
@@ -330,18 +349,43 @@
       color: var(--muted);
       border-top: 1px solid var(--border);
     }
+
+    /* ── RTL support ── */
+    [dir="rtl"] .option-card { flex-direction: row-reverse; }
+    [dir="rtl"] .action-list { padding-left: 0; padding-right: 18px; }
+    [dir="rtl"] .btn-row { flex-direction: row-reverse; }
+    [dir="rtl"] .brc-card { text-align: right; }
+    [dir="rtl"] .hint, [dir="rtl"] .option-desc { text-align: right; }
+    [dir="rtl"] .privacy-banner { flex-direction: row-reverse; }
+    [dir="rtl"] .contact-links a { text-align: right; }
+    [dir="rtl"] .step-badge { float: right; }
+    [dir="rtl"] h2, [dir="rtl"] .option-title, [dir="rtl"] .tier-title, [dir="rtl"] .tier-label { text-align: right; }
+    [dir="rtl"] .brc-card h3 { text-align: right; }
   </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="appContainer">
   <header>
-    <h1>RFL Frontline Triage Tool</h1>
-    <p>Restoring Family Links Rapid Screening</p>
+    <h1 id="headerTitle">RFL Frontline Triage Tool</h1>
+    <p id="headerSubtitle">Restoring Family Links Rapid Screening</p>
   </header>
 
+  <!-- Language toggle bar -->
+  <div class="lang-bar" id="langBar">
+    <button class="lang-btn active" data-lang="en">English</button>
+    <button class="lang-btn" data-lang="bg">Български</button>
+    <button class="lang-btn" data-lang="ru">Русский</button>
+    <button class="lang-btn" data-lang="uk">Українська</button>
+    <button class="lang-btn" data-lang="ar">العربية</button>
+    <button class="lang-btn" data-lang="fa">فارسی</button>
+    <button class="lang-btn" data-lang="ku">Kurdî</button>
+    <button class="lang-btn" data-lang="prs">دری</button>
+    <button class="lang-btn" data-lang="ps">پښتو</button>
+  </div>
+
   <div class="privacy-banner">
-    <span>Data Minimization: Do NOT enter names, IDs, or personal histories.</span>
+    <span id="privacyText">Data Minimization: Do NOT enter names, IDs, or personal histories.</span>
   </div>
 
   <div class="progress-bar">
@@ -349,202 +393,1100 @@
   </div>
 
   <main>
-    <!-- STEP 0: Operational Setting & Consent -->
+    <!-- STEP 0: Setting & Consent -->
     <section class="step active" id="step0">
-      <span class="step-badge">Setup &amp; Consent</span>
-      <h2>1. Select Operational Setting</h2>
-      <p class="hint">Choose where this screening is taking place to tailor referral contacts.</p>
+      <span class="step-badge" data-i18n="step0.badge">Setup &amp; Consent</span>
+      <h2 data-i18n="step0.title">1. Select Operational Setting</h2>
+      <p class="hint" data-i18n="step0.hint">Choose where this screening is taking place to tailor referral contacts.</p>
 
       <div class="option-group" id="settingGroup">
         <label class="option-card selected" onclick="selectRadio('setting', 'brc', this)">
           <input type="radio" name="setting" value="brc" checked />
           <div>
-            <span class="option-title">Bulgarian Red Cross Office / Phone</span>
-            <span class="option-desc">Sofia HQ, regional branch, or BRC phone/Viber/WhatsApp intake.</span>
+            <span class="option-title" data-i18n="step0.opt.brc.title">Bulgarian Red Cross Office / Phone</span>
+            <span class="option-desc" data-i18n="step0.opt.brc.desc">Sofia HQ, regional branch, or BRC phone/Viber/WhatsApp intake.</span>
           </div>
         </label>
         <label class="option-card" onclick="selectRadio('setting', 'field', this)">
           <input type="radio" name="setting" value="field" />
           <div>
-            <span class="option-title">Field / Transit / Border Point</span>
-            <span class="option-desc">Mobile team, Humanitarian Service Point, or reception center.</span>
+            <span class="option-title" data-i18n="step0.opt.field.title">Field / Transit / Border Point</span>
+            <span class="option-desc" data-i18n="step0.opt.field.desc">Mobile team, Humanitarian Service Point, or reception center.</span>
           </div>
         </label>
       </div>
 
-      <h2>2. Informed Verbal Consent</h2>
-      <p class="hint">Explain: "Red Cross RFL services are free, confidential, neutral, and separate from border or asylum authorities. Do you agree to answer a few quick screening questions?"</p>
+      <h2 data-i18n="step0.consent.title">2. Informed Verbal Consent</h2>
+      <p class="hint" data-i18n="step0.consent.hint">Explain: "Red Cross RFL services are free, confidential, neutral, and separate from border or asylum authorities. Do you agree to answer a few quick screening questions?"</p>
 
       <div class="option-group">
         <label class="option-card" onclick="toggleConsent(this)">
           <input type="checkbox" id="consentCheck" />
           <div>
-            <span class="option-title">Person gives informed consent to proceed</span>
-            <span class="option-desc">Required before continuing screening.</span>
+            <span class="option-title" data-i18n="step0.consent.check.title">Person gives informed consent to proceed</span>
+            <span class="option-desc" data-i18n="step0.consent.check.desc">Required before continuing screening.</span>
           </div>
         </label>
       </div>
 
       <div class="btn-row">
-        <button class="btn-primary" id="btnStart" disabled onclick="goToStep(1)">Start Screening &rarr;</button>
+        <button class="btn-primary" id="btnStart" disabled onclick="goToStep(1)" data-i18n="btn.start">Start Screening →</button>
       </div>
     </section>
 
-    <!-- STEP 1: Eligibility & Relationship -->
+    <!-- STEP 1: Eligibility -->
     <section class="step" id="step1">
-      <span class="step-badge">Stage 1 of 4 &bull; Eligibility</span>
-      <h2>Relationship &amp; Separation Check</h2>
-      <p class="hint">Who is the person looking for, and how did contact break?</p>
+      <span class="step-badge" data-i18n="step1.badge">Stage 1 of 4 • Eligibility</span>
+      <h2 data-i18n="step1.title">Relationship &amp; Separation Check</h2>
+      <p class="hint" data-i18n="step1.hint">Who is the person looking for, and how did contact break?</p>
 
       <div class="option-group">
         <label class="option-card" onclick="selectRadio('eligibility', 'eligible', this)">
           <input type="radio" name="eligibility" value="eligible" />
           <div>
-            <span class="option-title">Close family member &amp; involuntary loss of contact</span>
-            <span class="option-desc">Spouse, child, parent, sibling, or legal dependent separated by conflict, transit, disaster, or detention.</span>
+            <span class="option-title" data-i18n="step1.opt.eligible.title">Close family member &amp; involuntary loss of contact</span>
+            <span class="option-desc" data-i18n="step1.opt.eligible.desc">Spouse, child, parent, sibling, or legal dependent separated by conflict, transit, disaster, or detention.</span>
           </div>
         </label>
         <label class="option-card" onclick="selectRadio('eligibility', 'non_eligible', this)">
           <input type="radio" name="eligibility" value="non_eligible" />
           <div>
-            <span class="option-title">Voluntary separation, visa/legal query, or non-family</span>
-            <span class="option-desc">Relatives refuse contact, seeking legal family reunification visas, or looking for friends/neighbors.</span>
+            <span class="option-title" data-i18n="step1.opt.non.title">Voluntary separation, visa/legal query, or non-family</span>
+            <span class="option-desc" data-i18n="step1.opt.non.desc">Relatives refuse contact, seeking legal family reunification visas, or looking for friends/neighbors.</span>
           </div>
         </label>
       </div>
 
       <div class="btn-row">
-        <button class="btn-secondary" onclick="goToStep(0)">&larr; Back</button>
-        <button class="btn-primary" id="btnStep1" disabled onclick="handleStep1()">Continue &rarr;</button>
+        <button class="btn-secondary" onclick="goToStep(0)" data-i18n="btn.back">← Back</button>
+        <button class="btn-primary" id="btnStep1" disabled onclick="handleStep1()" data-i18n="btn.continue">Continue →</button>
       </div>
     </section>
 
     <!-- STEP 2: Vulnerability Flags -->
     <section class="step" id="step2">
-      <span class="step-badge">Stage 2 of 4 &bull; Urgency Check</span>
-      <h2>Critical Vulnerability Flags</h2>
-      <p class="hint">Select all conditions that apply right now (if any):</p>
+      <span class="step-badge" data-i18n="step2.badge">Stage 2 of 4 • Urgency Check</span>
+      <h2 data-i18n="step2.title">Critical Vulnerability Flags</h2>
+      <p class="hint" data-i18n="step2.hint">Select all conditions that apply right now (if any):</p>
 
       <div class="option-group">
         <label class="option-card" onclick="toggleFlag(this)">
           <input type="checkbox" name="vuln" value="uasc" />
           <div>
-            <span class="option-title">Unaccompanied or Separated Child (Under 18)</span>
-            <span class="option-desc">Either the applicant or the missing relative is a minor alone.</span>
+            <span class="option-title" data-i18n="step2.opt.uasc.title">Unaccompanied or Separated Child (Under 18)</span>
+            <span class="option-desc" data-i18n="step2.opt.uasc.desc">Either the applicant or the missing relative is a minor alone.</span>
           </div>
         </label>
         <label class="option-card" onclick="toggleFlag(this)">
           <input type="checkbox" name="vuln" value="medical" />
           <div>
-            <span class="option-title">Medical Emergency / Severe Disability / Elderly</span>
-            <span class="option-desc">Life-threatening condition, urgent medication need, or vulnerable dependent.</span>
+            <span class="option-title" data-i18n="step2.opt.medical.title">Medical Emergency / Severe Disability / Elderly</span>
+            <span class="option-desc" data-i18n="step2.opt.medical.desc">Life-threatening condition, urgent medication need, or vulnerable dependent.</span>
           </div>
         </label>
         <label class="option-card" onclick="toggleFlag(this)">
           <input type="checkbox" name="vuln" value="detention" />
           <div>
-            <span class="option-title">Suspected Detention, Arrest, or Kidnapping</span>
-            <span class="option-desc">Person believed held by authorities, border forces, or armed groups.</span>
+            <span class="option-title" data-i18n="step2.opt.detention.title">Suspected Detention, Arrest, or Kidnapping</span>
+            <span class="option-desc" data-i18n="step2.opt.detention.desc">Person believed held by authorities, border forces, or armed groups.</span>
           </div>
         </label>
         <label class="option-card" onclick="toggleFlag(this)">
           <input type="checkbox" name="vuln" value="conflict" />
           <div>
-            <span class="option-title">Active Armed Conflict / Shipwreck / Border Pushback</span>
-            <span class="option-desc">Sudden separation during acute life-threatening emergency.</span>
+            <span class="option-title" data-i18n="step2.opt.conflict.title">Active Armed Conflict / Shipwreck / Border Pushback</span>
+            <span class="option-desc" data-i18n="step2.opt.conflict.desc">Sudden separation during acute life-threatening emergency.</span>
           </div>
         </label>
       </div>
 
       <div class="btn-row">
-        <button class="btn-secondary" onclick="goToStep(1)">&larr; Back</button>
-        <button class="btn-primary" onclick="handleStep2()">Continue &rarr;</button>
+        <button class="btn-secondary" onclick="goToStep(1)" data-i18n="btn.back">← Back</button>
+        <button class="btn-primary" onclick="handleStep2()" data-i18n="btn.continue">Continue →</button>
       </div>
     </section>
 
-    <!-- STEP 3: Connectivity Check -->
+    <!-- STEP 3: Connectivity -->
     <section class="step" id="step3">
-      <span class="step-badge">Stage 3 of 4 &bull; Connectivity</span>
-      <h2>Can they reach their family if given a phone?</h2>
-      <p class="hint">Determine whether this is a technical access barrier or a true tracing need.</p>
+      <span class="step-badge" data-i18n="step3.badge">Stage 3 of 4 • Connectivity</span>
+      <h2 data-i18n="step3.title">Can they reach their family if given a phone?</h2>
+      <p class="hint" data-i18n="step3.hint">Determine whether this is a technical access barrier or a true tracing need.</p>
 
       <div class="option-group">
         <label class="option-card" onclick="selectRadio('connectivity', 'needs_phone', this)">
           <input type="radio" name="connectivity" value="needs_phone" />
           <div>
-            <span class="option-title">Yes &mdash; they know the number/account, just lack access</span>
-            <span class="option-desc">Dead battery, lost phone, no SIM/credit, or no Wi-Fi access.</span>
+            <span class="option-title" data-i18n="step3.opt.phone.title">Yes — they know the number/account, just lack access</span>
+            <span class="option-desc" data-i18n="step3.opt.phone.desc">Dead battery, lost phone, no SIM/credit, or no Wi-Fi access.</span>
           </div>
         </label>
         <label class="option-card" onclick="selectRadio('connectivity', 'lost_contact', this)">
           <input type="radio" name="connectivity" value="lost_contact" />
           <div>
-            <span class="option-title">No &mdash; numbers don't work or whereabouts are unknown</span>
-            <span class="option-desc">They have tried calling/messaging or have no working contact details.</span>
+            <span class="option-title" data-i18n="step3.opt.lost.title">No — numbers don't work or whereabouts are unknown</span>
+            <span class="option-desc" data-i18n="step3.opt.lost.desc">They have tried calling/messaging or have no working contact details.</span>
           </div>
         </label>
       </div>
 
       <div class="btn-row">
-        <button class="btn-secondary" onclick="goToStep(2)">&larr; Back</button>
-        <button class="btn-primary" id="btnStep3" disabled onclick="handleStep3()">Continue &rarr;</button>
+        <button class="btn-secondary" onclick="goToStep(2)" data-i18n="btn.back">← Back</button>
+        <button class="btn-primary" id="btnStep3" disabled onclick="handleStep3()" data-i18n="btn.continue">Continue →</button>
       </div>
     </section>
 
-    <!-- STEP 4: Context & Prior Registration -->
+    <!-- STEP 4: Prior Registration -->
     <section class="step" id="step4">
-      <span class="step-badge">Stage 4 of 4 &bull; Case Context</span>
-      <h2>Prior Red Cross / ICRC Registration</h2>
-      <p class="hint">Has a tracing request already been opened in another country or with ICRC?</p>
+      <span class="step-badge" data-i18n="step4.badge">Stage 4 of 4 • Case Context</span>
+      <h2 data-i18n="step4.title">Prior Red Cross / ICRC Registration</h2>
+      <p class="hint" data-i18n="step4.hint">Has a tracing request already been opened in another country or with ICRC?</p>
 
       <div class="option-group">
         <label class="option-card" onclick="selectRadio('prior', 'no', this)">
           <input type="radio" name="prior" value="no" />
           <div>
-            <span class="option-title">No prior tracing case opened</span>
-            <span class="option-desc">First time requesting Red Cross / Red Crescent RFL assistance.</span>
+            <span class="option-title" data-i18n="step4.opt.no.title">No prior tracing case opened</span>
+            <span class="option-desc" data-i18n="step4.opt.no.desc">First time requesting Red Cross / Red Crescent RFL assistance.</span>
           </div>
         </label>
         <label class="option-card" onclick="selectRadio('prior', 'yes', this)">
           <input type="radio" name="prior" value="yes" />
           <div>
-            <span class="option-title">Yes &mdash; already registered with Red Cross / ICRC</span>
-            <span class="option-desc">Needs follow-up, case update, or transfer to Bulgaria.</span>
+            <span class="option-title" data-i18n="step4.opt.yes.title">Yes — already registered with Red Cross / ICRC</span>
+            <span class="option-desc" data-i18n="step4.opt.yes.desc">Needs follow-up, case update, or transfer to Bulgaria.</span>
           </div>
         </label>
       </div>
 
       <div class="btn-row">
-        <button class="btn-secondary" onclick="goToStep(3)">&larr; Back</button>
-        <button class="btn-primary" id="btnStep4" disabled onclick="calculateResult()">View Triage Result &rarr;</button>
+        <button class="btn-secondary" onclick="goToStep(3)" data-i18n="btn.back">← Back</button>
+        <button class="btn-primary" id="btnStep4" disabled onclick="calculateResult()" data-i18n="btn.result">View Triage Result →</button>
       </div>
     </section>
 
-    <!-- STEP 5: Result Screen -->
+    <!-- STEP 5: Result -->
     <section class="step" id="step5">
-      <span class="step-badge">Triage Outcome</span>
+      <span class="step-badge" data-i18n="step5.badge">Triage Outcome</span>
       <div id="resultContainer"></div>
 
       <div class="btn-row">
-        <button class="btn-primary" onclick="resetApp()">Clear &amp; Start Next Assessment</button>
+        <button class="btn-primary" onclick="resetApp()" data-i18n="btn.reset">Clear &amp; Start Next Assessment</button>
       </div>
     </section>
   </main>
 
   <footer>
-    Stateless Triage Aid &bull; No data is saved or transmitted by this page.
+    <span data-i18n="footer">Stateless Triage Aid • No data is saved or transmitted by this page.</span>
   </footer>
 </div>
 
 <script>
+  // ============================================================
+  //  TRANSLATIONS — each key maps to each language
+  // ============================================================
+  const TRANSLATIONS = {
+    en: {
+      "header.title": "RFL Frontline Triage Tool",
+      "header.subtitle": "Restoring Family Links Rapid Screening",
+      "privacy": "Data Minimization: Do NOT enter names, IDs, or personal histories.",
+      "step0.badge": "Setup & Consent",
+      "step0.title": "1. Select Operational Setting",
+      "step0.hint": "Choose where this screening is taking place to tailor referral contacts.",
+      "step0.opt.brc.title": "Bulgarian Red Cross Office / Phone",
+      "step0.opt.brc.desc": "Sofia HQ, regional branch, or BRC phone/Viber/WhatsApp intake.",
+      "step0.opt.field.title": "Field / Transit / Border Point",
+      "step0.opt.field.desc": "Mobile team, Humanitarian Service Point, or reception center.",
+      "step0.consent.title": "2. Informed Verbal Consent",
+      "step0.consent.hint": "Explain: \"Red Cross RFL services are free, confidential, neutral, and separate from border or asylum authorities. Do you agree to answer a few quick screening questions?\"",
+      "step0.consent.check.title": "Person gives informed consent to proceed",
+      "step0.consent.check.desc": "Required before continuing screening.",
+      "btn.start": "Start Screening →",
+      "btn.back": "← Back",
+      "btn.continue": "Continue →",
+      "btn.result": "View Triage Result →",
+      "btn.reset": "Clear & Start Next Assessment",
+      "step1.badge": "Stage 1 of 4 • Eligibility",
+      "step1.title": "Relationship & Separation Check",
+      "step1.hint": "Who is the person looking for, and how did contact break?",
+      "step1.opt.eligible.title": "Close family member & involuntary loss of contact",
+      "step1.opt.eligible.desc": "Spouse, child, parent, sibling, or legal dependent separated by conflict, transit, disaster, or detention.",
+      "step1.opt.non.title": "Voluntary separation, visa/legal query, or non-family",
+      "step1.opt.non.desc": "Relatives refuse contact, seeking legal family reunification visas, or looking for friends/neighbors.",
+      "step2.badge": "Stage 2 of 4 • Urgency Check",
+      "step2.title": "Critical Vulnerability Flags",
+      "step2.hint": "Select all conditions that apply right now (if any):",
+      "step2.opt.uasc.title": "Unaccompanied or Separated Child (Under 18)",
+      "step2.opt.uasc.desc": "Either the applicant or the missing relative is a minor alone.",
+      "step2.opt.medical.title": "Medical Emergency / Severe Disability / Elderly",
+      "step2.opt.medical.desc": "Life-threatening condition, urgent medication need, or vulnerable dependent.",
+      "step2.opt.detention.title": "Suspected Detention, Arrest, or Kidnapping",
+      "step2.opt.detention.desc": "Person believed held by authorities, border forces, or armed groups.",
+      "step2.opt.conflict.title": "Active Armed Conflict / Shipwreck / Border Pushback",
+      "step2.opt.conflict.desc": "Sudden separation during acute life-threatening emergency.",
+      "step3.badge": "Stage 3 of 4 • Connectivity",
+      "step3.title": "Can they reach their family if given a phone?",
+      "step3.hint": "Determine whether this is a technical access barrier or a true tracing need.",
+      "step3.opt.phone.title": "Yes — they know the number/account, just lack access",
+      "step3.opt.phone.desc": "Dead battery, lost phone, no SIM/credit, or no Wi-Fi access.",
+      "step3.opt.lost.title": "No — numbers don't work or whereabouts are unknown",
+      "step3.opt.lost.desc": "They have tried calling/messaging or have no working contact details.",
+      "step4.badge": "Stage 4 of 4 • Case Context",
+      "step4.title": "Prior Red Cross / ICRC Registration",
+      "step4.hint": "Has a tracing request already been opened in another country or with ICRC?",
+      "step4.opt.no.title": "No prior tracing case opened",
+      "step4.opt.no.desc": "First time requesting Red Cross / Red Crescent RFL assistance.",
+      "step4.opt.yes.title": "Yes — already registered with Red Cross / ICRC",
+      "step4.opt.yes.desc": "Needs follow-up, case update, or transfer to Bulgaria.",
+      "step5.badge": "Triage Outcome",
+      "footer": "Stateless Triage Aid • No data is saved or transmitted by this page.",
+      "tier1.label": "Tier 1 • Critical / Urgent",
+      "tier1.title": "Immediate Specialist Handover",
+      "tier1.triggered": "Triggered by:",
+      "tier1.flag.uasc": "Unaccompanied/Separated Minor",
+      "tier1.flag.medical": "Medical/Elderly Vulnerability",
+      "tier1.flag.detention": "Suspected Detention/Kidnapping",
+      "tier1.flag.conflict": "Active Conflict/Pushback Separation",
+      "tier1.action1": "Do not delay: Conduct an immediate warm handover (phone or in-person) to a trained RFL Caseworker or Protection Officer.",
+      "tier1.action2": "Child Protection: If an unaccompanied minor is involved, notify Child Protection / State Agency for Child Protection protocols immediately.",
+      "tier1.action3": "Safety First: Do not record sensitive details on unencrypted personal phones.",
+      "tier2.label": "Tier 2 • Connectivity Support",
+      "tier2.title": "Provide Immediate Phone / Wi-Fi Access",
+      "tier2.desc": "No formal tracing case required right now—the person only lacks communication tools.",
+      "tier2.action1": "Free Call / Message: Offer a 3–5 minute free phone call, WhatsApp/Viber message, or local Wi-Fi access at the service point.",
+      "tier2.action2": "Device Charging: Provide access to a charging station if their own phone battery is dead.",
+      "tier2.action3": "Re-evaluate if Needed: If the family's number is disconnected or unanswered after trying, re-screen as Tier 3 Standard Tracing.",
+      "tier3.label": "Tier 3 • Standard Tracing",
+      "tier3.title": "Schedule Formal RFL Intake",
+      "tier3.desc": "Eligible involuntary family separation with stable immediate safety.",
+      "tier3.prior.yes": "Existing Case: Ask if they have an ICRC/Red Cross case reference number so BRC can request a cross-border file transfer in FL Answers.",
+      "tier3.prior.no": "New Tracing File: Schedule a full RFL intake interview to collect detailed biographical data and signed data-protection consent.",
+      "tier3.action.self": "Self-Tracing Check: Mention the public Red Cross Trace the Face photo gallery for European migration routes.",
+      "tier3.action.privacy": "Protect Privacy: Ensure full intake forms are completed only by authorized RFL staff in a private setting.",
+      "tier4.label": "Tier 4 • Information & Referral",
+      "tier4.title": "Non-RFL Support / General Guidance",
+      "tier4.desc": "Does not meet RFL tracing criteria (voluntary separation, legal/visa matter, or non-family).",
+      "tier4.action1": "Explain Scope: Politely explain that Red Cross tracing applies only to involuntary separation of close family members.",
+      "tier4.action2": "Legal / Asylum Referrals: For family reunification visas or residency procedures, refer to the Bulgarian Red Cross Refugee-Migrant Service or legal aid partners (e.g., BHC / FAR).",
+      "tier4.action3": "Self-Service Tools: Share public social media or community group tips if looking for acquaintances.",
+      "brc.title": "Bulgarian Red Cross (BRC) RFL Office & Hotline",
+      "brc.address": "Address: 76 James Bourchier Blvd., 1407 Sofia, Bulgaria",
+      "brc.phone1": "Primary Tracing Mobile: +359 88 866 80 58",
+      "brc.phone2": "Sofia Office Landline 1: +359 2 4923 040",
+      "brc.phone3": "Sofia Office Landline 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "Email: tracing@redcross.bg",
+      "field.title": "Field Team Referral Protocol",
+      "field.desc": "Escalate to your Field RFL Focal Point or contact the Bulgarian Red Cross Tracing Service directly for case handover:",
+      "field.call": "Call BRC Tracing: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    bg: {
+      "header.title": "RFL Инструмент за фронтов триаж",
+      "header.subtitle": "Бърз скрининг за Възстановяване на семейни връзки",
+      "privacy": "Минимизиране на данни: НЕ въвеждайте имена, лични номера или лични истории.",
+      "step0.badge": "Настройка и съгласие",
+      "step0.title": "1. Изберете оперативна обстановка",
+      "step0.hint": "Изберете къде се провежда скринингът, за да се определят контактите за насочване.",
+      "step0.opt.brc.title": "Български Червен кръст / Телефон",
+      "step0.opt.brc.desc": "Централа София, регионален клон или прием чрез телефон/Viber/WhatsApp на БЧК.",
+      "step0.opt.field.title": "Терен / Транзит / Граничен пункт",
+      "step0.opt.field.desc": "Мобилен екип, Хуманитарен център или приемен център.",
+      "step0.consent.title": "2. Информирано устно съгласие",
+      "step0.consent.hint": "Обяснете: \"Услугите на Червения кръст за ВСВ са безплатни, поверителни, неутрални и независими от граничните или имиграционните власти. Съгласни ли сте да отговорите на няколко кратки въпроса?\"",
+      "step0.consent.check.title": "Лицето дава информирано съгласие за продължаване",
+      "step0.consent.check.desc": "Изисква се преди продължаване на скрининга.",
+      "btn.start": "Започнете скрининг →",
+      "btn.back": "← Назад",
+      "btn.continue": "Продължете →",
+      "btn.result": "Вижте резултата →",
+      "btn.reset": "Изчистване и ново оценяване",
+      "step1.badge": "Етап 1 от 4 • Допустимост",
+      "step1.title": "Проверка на връзка и разделяне",
+      "step1.hint": "Кого търси лицето и как е прекъсната връзката?",
+      "step1.opt.eligible.title": "Близък роднина и неволна загуба на контакт",
+      "step1.opt.eligible.desc": "Съпруг/а, дете, родител, брат/сестра или законен зависим, разделени от конфликт, транзит, бедствие или задържане.",
+      "step1.opt.non.title": "Доброволно разделяне, виза/правно запитване или несемейно лице",
+      "step1.opt.non.desc": "Роднини отказват контакт, търсят законна виза за събиране на семейството или търсят приятели/съседи.",
+      "step2.badge": "Етап 2 от 4 • Спешност",
+      "step2.title": "Критични уязвимости",
+      "step2.hint": "Изберете всички условия, които се отнасят в момента (ако има):",
+      "step2.opt.uasc.title": "Непридружено или разделено дете (под 18 г.)",
+      "step2.opt.uasc.desc": "Кандидатът или изчезналият роднина е непълнолетен сам.",
+      "step2.opt.medical.title": "Медицинска спешност / Тежко увреждане / Възрастен",
+      "step2.opt.medical.desc": "Живозастрашаващо състояние, спешна нужда от лекарства или уязвим зависим.",
+      "step2.opt.detention.title": "Предполагаемо задържане, арест или отвличане",
+      "step2.opt.detention.desc": "Лице, за което се смята, че е задържано от власти, гранични сили или въоръжени групи.",
+      "step2.opt.conflict.title": "Активен въоръжен конфликт / Корабокрушение / Връщане на границата",
+      "step2.opt.conflict.desc": "Внезапно разделяне при остра животозастрашаваща ситуация.",
+      "step3.badge": "Етап 3 от 4 • Свързаност",
+      "step3.title": "Могат ли да се свържат със семейството си с телефон?",
+      "step3.hint": "Определете дали това е техническа бариера или истинска нужда от издирване.",
+      "step3.opt.phone.title": "Да — знаят номера/акаунта, просто нямат достъп",
+      "step3.opt.phone.desc": "Изтощена батерия, изгубен телефон, без SIM/кредит или без Wi-Fi.",
+      "step3.opt.lost.title": "Не — номерата не работят или местонахождението е неизвестно",
+      "step3.opt.lost.desc": "Опитвали са се да се обадят/пишат или нямат работещи контакти.",
+      "step4.badge": "Етап 4 от 4 • Контекст на случая",
+      "step4.title": "Предишна регистрация в Червения кръст / МКЧК",
+      "step4.hint": "Открита ли е вече заявка за издирване в друга страна или в МКЧК?",
+      "step4.opt.no.title": "Няма открит предишен случай на издирване",
+      "step4.opt.no.desc": "Първо искане за помощ от Червения кръст / Червения полумесец за ВСВ.",
+      "step4.opt.yes.title": "Да — вече регистриран в Червения кръст / МКЧК",
+      "step4.opt.yes.desc": "Нужда от проследяване, актуализация на случая или прехвърляне в България.",
+      "step5.badge": "Резултат от триажа",
+      "footer": "Инструмент за триаж без запазване на данни • Тази страница не запазва или предава данни.",
+      "tier1.label": "Ниво 1 • Критично / Спешно",
+      "tier1.title": "Незабавно предаване на специалист",
+      "tier1.triggered": "Заключено от:",
+      "tier1.flag.uasc": "Непридружено/разделено дете",
+      "tier1.flag.medical": "Медицинска/възрастова уязвимост",
+      "tier1.flag.detention": "Предполагаемо задържане/отвличане",
+      "tier1.flag.conflict": "Активен конфликт/разделяне на границата",
+      "tier1.action1": "Не се бавете: Незабавно предайте случая (по телефона или на място) на обучен служител по ВСВ или служител по закрила.",
+      "tier1.action2": "Закрила на детето: Ако има непридружено дете, незабавно уведомете органите за закрила на детето.",
+      "tier1.action3": "Безопасността е на първо място: Не записвайте чувствителни данни на нешифровани лични телефони.",
+      "tier2.label": "Ниво 2 • Подкрепа за свързаност",
+      "tier2.title": "Осигурете незабавен достъп до телефон / Wi-Fi",
+      "tier2.desc": "Не е необходим официален случай на издирване — лицето просто няма средства за комуникация.",
+      "tier2.action1": "Безплатно обаждане / съобщение: Предложете 3–5 минути безплатен разговор, съобщение в WhatsApp/Viber или достъп до Wi-Fi в пункта за услуги.",
+      "tier2.action2": "Зареждане на устройство: Осигурете достъп до зарядна станция, ако батерията на телефона им е изтощена.",
+      "tier2.action3": "Повторна оценка при нужда: Ако номерът на семейството е изключен или няма отговор, преоценете като Ниво 3 Стандартно издирване.",
+      "tier3.label": "Ниво 3 • Стандартно издирване",
+      "tier3.title": "Насрочете официално интервю за ВСВ",
+      "tier3.desc": "Отговаря на условията за неволно разделяне на семейството с осигурена незабавна безопасност.",
+      "tier3.prior.yes": "Съществуващ случай: Попитайте дали има референтен номер на МКЧК/Червения кръст, за да може БЧК да поиска трансграничен трансфер на файла в FL Answers.",
+      "tier3.prior.no": "Нов файл за издирване: Насрочете пълно интервю за ВСВ за събиране на подробни биографични данни и подписано съгласие за защита на данните.",
+      "tier3.action.self": "Самопроверка: Споменете публичната фотогалерия на Червения кръст „Trace the Face“ за европейски миграционни маршрути.",
+      "tier3.action.privacy": "Защитете поверителността: Пълните формуляри се попълват само от упълномощен персонал на ВСВ насаме.",
+      "tier4.label": "Ниво 4 • Информация и насочване",
+      "tier4.title": "Подкрепа извън ВСВ / Общи насоки",
+      "tier4.desc": "Не отговаря на критериите за издирване на ВСВ (доброволно разделяне, правен/визов въпрос или несемейно лице).",
+      "tier4.action1": "Обяснете обхвата: Учтиво обяснете, че издирването на Червения кръст се отнася само за неволно разделяне на близки роднини.",
+      "tier4.action2": "Правни / убежищни насочвания: За визи за събиране на семейството или процедури по пребиваване се обърнете към Службата за бежанци и мигранти на БЧК или партньори за правна помощ (напр. БХК / FAR).",
+      "tier4.action3": "Инструменти за самообслужване: Споделете съвети от публични социални мрежи или общностни групи, ако търсят познати.",
+      "brc.title": "БЧК Служба ВСВ и гореща линия",
+      "brc.address": "Адрес: бул. „Джеймс Баучер“ 76, 1407 София, България",
+      "brc.phone1": "Основен мобилен за издирване: +359 88 866 80 58",
+      "brc.phone2": "Стационарен София 1: +359 2 4923 040",
+      "brc.phone3": "Стационарен София 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "Имейл: tracing@redcross.bg",
+      "field.title": "Протокол за насочване на теренен екип",
+      "field.desc": "Обърнете се към вашия теренен координатор по ВСВ или се свържете директно със Службата за издирване на БЧК за предаване на случая:",
+      "field.call": "Обадете се на БЧК Издирване: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    ru: {
+      "header.title": "Инструмент для триажа RFL",
+      "header.subtitle": "Быстрый скрининг Восстановления семейных связей",
+      "privacy": "Минимизация данных: НЕ вводите имена, идентификаторы или личные истории.",
+      "step0.badge": "Настройка и согласие",
+      "step0.title": "1. Выберите оперативную обстановку",
+      "step0.hint": "Выберите место проведения скрининга для подбора контактов для направления.",
+      "step0.opt.brc.title": "Болгарский Красный Крест / Телефон",
+      "step0.opt.brc.desc": "Штаб-квартира в Софии, региональный филиал или приём по телефону/Viber/WhatsApp.",
+      "step0.opt.field.title": "Полевой / Транзитный / Пограничный пункт",
+      "step0.opt.field.desc": "Мобильная группа, Гуманитарный центр или приёмный центр.",
+      "step0.consent.title": "2. Информированное устное согласие",
+      "step0.consent.hint": "Объясните: «Услуги RFL Красного Креста бесплатны, конфиденциальны, нейтральны и не зависят от пограничных или иммиграционных властей. Вы согласны ответить на несколько коротких вопросов?»",
+      "step0.consent.check.title": "Лицо даёт информированное согласие на продолжение",
+      "step0.consent.check.desc": "Требуется перед продолжением скрининга.",
+      "btn.start": "Начать скрининг →",
+      "btn.back": "← Назад",
+      "btn.continue": "Продолжить →",
+      "btn.result": "Посмотреть результат →",
+      "btn.reset": "Очистить и начать заново",
+      "step1.badge": "Этап 1 из 4 • Соответствие критериям",
+      "step1.title": "Проверка родства и разлуки",
+      "step1.hint": "Кого ищет человек и как прервалась связь?",
+      "step1.opt.eligible.title": "Близкий родственник и вынужденная потеря связи",
+      "step1.opt.eligible.desc": "Супруг(а), ребёнок, родитель, брат/сестра или иждивенец, разлучённые конфликтом, транзитом, бедствием или задержанием.",
+      "step1.opt.non.title": "Добровольная разлука, визовый/правовой вопрос или не родственник",
+      "step1.opt.non.desc": "Родственники отказываются от контакта, запрос визы для воссоединения семьи или поиск друзей/соседей.",
+      "step2.badge": "Этап 2 из 4 • Срочность",
+      "step2.title": "Критические факторы уязвимости",
+      "step2.hint": "Выберите все применимые условия (если есть):",
+      "step2.opt.uasc.title": "Ребёнок без сопровождения или разлучённый (до 18 лет)",
+      "step2.opt.uasc.desc": "Заявитель или пропавший родственник — несовершеннолетний без взрослых.",
+      "step2.opt.medical.title": "Медицинская помощь / Тяжёлая инвалидность / Пожилой возраст",
+      "step2.opt.medical.desc": "Угрожающее жизни состояние, срочная потребность в лекарствах или уязвимый иждивенец.",
+      "step2.opt.detention.title": "Подозрение на задержание, арест или похищение",
+      "step2.opt.detention.desc": "Предположительно удерживается властями, пограничниками или вооружёнными группами.",
+      "step2.opt.conflict.title": "Активный вооружённый конфликт / Кораблекрушение / Выдворение на границе",
+      "step2.opt.conflict.desc": "Внезапная разлука в условиях острой угрозы жизни.",
+      "step3.badge": "Этап 3 из 4 • Связь",
+      "step3.title": "Могут ли они связаться с семьёй, если дать телефон?",
+      "step3.hint": "Определите, это технический барьер или реальная потребность в розыске.",
+      "step3.opt.phone.title": "Да — знают номер/аккаунт, но нет доступа",
+      "step3.opt.phone.desc": "Разряженный аккумулятор, потерян телефон, нет SIM/средств или Wi-Fi.",
+      "step3.opt.lost.title": "Нет — номера не работают или местонахождение неизвестно",
+      "step3.opt.lost.desc": "Пытались звонить/писать или нет рабочих контактов.",
+      "step4.badge": "Этап 4 из 4 • Контекст дела",
+      "step4.title": "Предыдущая регистрация в Красном Кресте / МККК",
+      "step4.hint": "Был ли уже открыт запрос на розыск в другой стране или в МККК?",
+      "step4.opt.no.title": "Предыдущее дело о розыске не открывалось",
+      "step4.opt.no.desc": "Первое обращение за помощью RFL Красного Креста / Красного Полумесяца.",
+      "step4.opt.yes.title": "Да — уже зарегистрирован в Красном Кресте / МККК",
+      "step4.opt.yes.desc": "Требуется отслеживание, обновление дела или передача в Болгарию.",
+      "step5.badge": "Результат триажа",
+      "footer": "Инструмент триажа без сохранения данных • Эта страница не сохраняет и не передаёт данные.",
+      "tier1.label": "Уровень 1 • Критический / Срочный",
+      "tier1.title": "Немедленная передача специалисту",
+      "tier1.triggered": "Основание:",
+      "tier1.flag.uasc": "Ребёнок без сопровождения/разлучённый",
+      "tier1.flag.medical": "Медицинская/возрастная уязвимость",
+      "tier1.flag.detention": "Подозрение на задержание/похищение",
+      "tier1.flag.conflict": "Активный конфликт/разлука на границе",
+      "tier1.action1": "Не откладывайте: Немедленно передайте дело (по телефону или лично) обученному специалисту RFL или сотруднику по защите.",
+      "tier1.action2": "Защита детей: При участии ребёнка без сопровождения немедленно уведомите органы защиты детей.",
+      "tier1.action3": "Безопасность прежде всего: Не записывайте конфиденциальные данные на незашифрованных личных телефонах.",
+      "tier2.label": "Уровень 2 • Поддержка связи",
+      "tier2.title": "Обеспечьте немедленный доступ к телефону / Wi-Fi",
+      "tier2.desc": "Формальное дело о розыске сейчас не требуется — человеку не хватает средств связи.",
+      "tier2.action1": "Бесплатный звонок / сообщение: Предложите 3–5 минут бесплатного звонка, сообщение WhatsApp/Viber или доступ к Wi-Fi в пункте обслуживания.",
+      "tier2.action2": "Зарядка устройства: Предоставьте доступ к зарядной станции, если телефон разряжен.",
+      "tier2.action3": "Повторная оценка при необходимости: Если номер семьи отключён или не отвечает, пересмотрите как Уровень 3 Стандартный розыск.",
+      "tier3.label": "Уровень 3 • Стандартный розыск",
+      "tier3.title": "Назначьте официальное интервью RFL",
+      "tier3.desc": "Соответствует критериям вынужденной разлуки семьи при стабильной непосредственной безопасности.",
+      "tier3.prior.yes": "Существующее дело: Спросите, есть ли у них номер дела МККК/Красного Креста, чтобы БКК мог запросить трансграничную передачу файла в FL Answers.",
+      "tier3.prior.no": "Новое дело о розыске: Назначьте полное интервью RFL для сбора подробных биографических данных и подписанного согласия на защиту данных.",
+      "tier3.action.self": "Самопроверка: Упомяните публичную фотогалерею Красного Креста Trace the Face для европейских миграционных маршрутов.",
+      "tier3.action.privacy": "Защитите конфиденциальность: Полные формы заполняются только уполномоченным персоналом RFL в приватной обстановке.",
+      "tier4.label": "Уровень 4 • Информация и направление",
+      "tier4.title": "Поддержка вне RFL / Общие рекомендации",
+      "tier4.desc": "Не соответствует критериям розыска RFL (добровольная разлука, правовой/визовый вопрос или не родственник).",
+      "tier4.action1": "Объясните сферу: Вежливо объясните, что розыск Красного Креста применяется только к вынужденной разлуке близких родственников.",
+      "tier4.action2": "Правовые / убежищные направления: Для виз воссоединения семьи или процедур проживания обратитесь в Службу по делам беженцев и мигрантов Болгарского Красного Креста или партнёров по правовой помощи (например, BHC / FAR).",
+      "tier4.action3": "Инструменты самообслуживания: Поделитесь советами из публичных соцсетей или сообществ, если ищут знакомых.",
+      "brc.title": "Служба RFL Болгарского Красного Креста и горячая линия",
+      "brc.address": "Адрес: бул. Джеймс Баучер 76, 1407 София, Болгария",
+      "brc.phone1": "Основной мобильный для розыска: +359 88 866 80 58",
+      "brc.phone2": "Софийский офис, городской 1: +359 2 4923 040",
+      "brc.phone3": "Софийский офис, городской 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "Email: tracing@redcross.bg",
+      "field.title": "Протокол направления полевой группы",
+      "field.desc": "Обратитесь к вашему полевому координатору RFL или напрямую в Службу розыска Болгарского Красного Креста для передачи дела:",
+      "field.call": "Позвонить в розыск БКК: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    uk: {
+      "header.title": "Інструмент тріажу RFL",
+      "header.subtitle": "Швидкий скринінг Відновлення родинних зв'язків",
+      "privacy": "Мінімізація даних: НЕ вводьте імена, ідентифікатори чи особисті історії.",
+      "step0.badge": "Налаштування та згода",
+      "step0.title": "1. Виберіть оперативну обстановку",
+      "step0.hint": "Виберіть місце проведення скринінгу для підбору контактів для направлення.",
+      "step0.opt.brc.title": "Болгарський Червоний Хрест / Телефон",
+      "step0.opt.brc.desc": "Штаб-квартира в Софії, регіональний відділ або прийом через телефон/Viber/WhatsApp.",
+      "step0.opt.field.title": "Польовий / Транзитний / Прикордонний пункт",
+      "step0.opt.field.desc": "Мобільна група, Гуманітарний центр або приймальний центр.",
+      "step0.consent.title": "2. Поінформована усна згода",
+      "step0.consent.hint": "Поясніть: «Послуги RFL Червоного Хреста є безкоштовними, конфіденційними, нейтральними та незалежними від прикордонних чи імміграційних органів. Чи згодні ви відповісти на кілька коротких запитань?»",
+      "step0.consent.check.title": "Особа дає поінформовану згоду на продовження",
+      "step0.consent.check.desc": "Потрібно перед продовженням скринінгу.",
+      "btn.start": "Почати скринінг →",
+      "btn.back": "← Назад",
+      "btn.continue": "Продовжити →",
+      "btn.result": "Переглянути результат →",
+      "btn.reset": "Очистити та почати заново",
+      "step1.badge": "Етап 1 з 4 • Відповідність критеріям",
+      "step1.title": "Перевірка спорідненості та розлуки",
+      "step1.hint": "Кого шукає особа і як обірвався зв'язок?",
+      "step1.opt.eligible.title": "Близький родич і вимушена втрата зв'язку",
+      "step1.opt.eligible.desc": "Чоловік/дружина, дитина, батько/мати, брат/сестра або утриманець, розлучені конфліктом, транзитом, катастрофою чи затриманням.",
+      "step1.opt.non.title": "Добровільна розлука, візове/правове питання або не родич",
+      "step1.opt.non.desc": "Родичі відмовляються від контакту, запит візи для возз'єднання сім'ї або пошук друзів/сусідів.",
+      "step2.badge": "Етап 2 з 4 • Терміновість",
+      "step2.title": "Критичні фактори вразливості",
+      "step2.hint": "Виберіть усі умови, що застосовуються (якщо є):",
+      "step2.opt.uasc.title": "Дитина без супроводу або розлучена (до 18 років)",
+      "step2.opt.uasc.desc": "Заявник або зниклий родич — неповнолітній наодинці.",
+      "step2.opt.medical.title": "Медична допомога / Тяжка інвалідність / Літня особа",
+      "step2.opt.medical.desc": "Загрозливий життю стан, нагальна потреба в ліках або вразливий утриманець.",
+      "step2.opt.detention.title": "Підозра на затримання, арешт або викрадення",
+      "step2.opt.detention.desc": "Особа, яку, ймовірно, утримують влада, прикордонники або збройні групи.",
+      "step2.opt.conflict.title": "Активний збройний конфлікт / Корабельна аварія / Видворення на кордоні",
+      "step2.opt.conflict.desc": "Раптова розлука під час гострої загрози життю.",
+      "step3.badge": "Етап 3 з 4 • Зв'язок",
+      "step3.title": "Чи можуть вони зв'язатися з родиною, якщо дати телефон?",
+      "step3.hint": "Визначте, чи це технічний бар'єр, чи справжня потреба в розшуку.",
+      "step3.opt.phone.title": "Так — знають номер/акаунт, просто немає доступу",
+      "step3.opt.phone.desc": "Розряджена батарея, втрачений телефон, немає SIM/коштів або Wi-Fi.",
+      "step3.opt.lost.title": "Ні — номери не працюють або місцезнаходження невідоме",
+      "step3.opt.lost.desc": "Намагалися телефонувати/писати або немає робочих контактів.",
+      "step4.badge": "Етап 4 з 4 • Контекст справи",
+      "step4.title": "Попередня реєстрація в Червоному Хресті / МКЧХ",
+      "step4.hint": "Чи вже відкрито запит на розшук в іншій країні або в МКЧХ?",
+      "step4.opt.no.title": "Попередня справа про розшук не відкривалася",
+      "step4.opt.no.desc": "Перше звернення за допомогою RFL Червоного Хреста / Червоного Півмісяця.",
+      "step4.opt.yes.title": "Так — вже зареєстрований у Червоному Хресті / МКЧХ",
+      "step4.opt.yes.desc": "Потрібне відстеження, оновлення справи або передача до Болгарії.",
+      "step5.badge": "Результат тріажу",
+      "footer": "Інструмент тріажу без збереження даних • Ця сторінка не зберігає та не передає дані.",
+      "tier1.label": "Рівень 1 • Критичний / Терміновий",
+      "tier1.title": "Негайна передача фахівцю",
+      "tier1.triggered": "Підстава:",
+      "tier1.flag.uasc": "Дитина без супроводу/розлучена",
+      "tier1.flag.medical": "Медична/вікова вразливість",
+      "tier1.flag.detention": "Підозра на затримання/викрадення",
+      "tier1.flag.conflict": "Активний конфлікт/розлука на кордоні",
+      "tier1.action1": "Не зволікайте: Негайно передайте справу (телефоном або особисто) навченому фахівцю RFL або співробітнику із захисту.",
+      "tier1.action2": "Захист дітей: У випадку дитини без супроводу негайно повідомте органи захисту дітей.",
+      "tier1.action3": "Безпека насамперед: Не записуйте конфіденційні дані на незашифрованих особистих телефонах.",
+      "tier2.label": "Рівень 2 • Підтримка зв'язку",
+      "tier2.title": "Забезпечте негайний доступ до телефону / Wi-Fi",
+      "tier2.desc": "Формальна справа про розшук зараз не потрібна — особі бракує засобів зв'язку.",
+      "tier2.action1": "Безкоштовний дзвінок / повідомлення: Запропонуйте 3–5 хвилин безкоштовного дзвінка, повідомлення WhatsApp/Viber або доступ до Wi-Fi у пункті обслуговування.",
+      "tier2.action2": "Заряджання пристрою: Надайте доступ до зарядної станції, якщо телефон розряджений.",
+      "tier2.action3": "Повторна оцінка за потреби: Якщо номер родини відключено або не відповідає, перегляньте як Рівень 3 Стандартний розшук.",
+      "tier3.label": "Рівень 3 • Стандартний розшук",
+      "tier3.title": "Призначте офіційне інтерв'ю RFL",
+      "tier3.desc": "Відповідає критеріям вимушеної розлуки родини за стабільної негайної безпеки.",
+      "tier3.prior.yes": "Наявна справа: Запитайте, чи мають вони номер справи МКЧХ/Червоного Хреста, щоб БЧХ міг запросити транскордонну передачу файлу в FL Answers.",
+      "tier3.prior.no": "Нова справа про розшук: Призначте повне інтерв'ю RFL для збору детальних біографічних даних і підписаної згоди на захист даних.",
+      "tier3.action.self": "Самоперевірка: Згадайте публічну фотогалерею Червоного Хреста Trace the Face для європейських міграційних маршрутів.",
+      "tier3.action.privacy": "Захистіть конфіденційність: Повні форми заповнюються лише уповноваженим персоналом RFL у приватній обстановці.",
+      "tier4.label": "Рівень 4 • Інформація та направлення",
+      "tier4.title": "Підтримка поза RFL / Загальні рекомендації",
+      "tier4.desc": "Не відповідає критеріям розшуку RFL (добровільна розлука, правове/візове питання або не родич).",
+      "tier4.action1": "Поясніть сферу: Ввічливо поясніть, що розшук Червоного Хреста застосовується лише до вимушеної розлуки близьких родичів.",
+      "tier4.action2": "Правові / притулкові направлення: Для віз возз'єднання родини або процедур проживання зверніться до Служби у справах біженців та мігрантів Болгарського Червоного Хреста або партнерів з правової допомоги (напр., BHC / FAR).",
+      "tier4.action3": "Інструменти самообслуговування: Поділіться порадами з публічних соцмереж або спільнот, якщо шукають знайомих.",
+      "brc.title": "Служба RFL Болгарського Червоного Хреста та гаряча лінія",
+      "brc.address": "Адреса: бул. Джеймс Баучер 76, 1407 Софія, Болгарія",
+      "brc.phone1": "Основний мобільний для розшуку: +359 88 866 80 58",
+      "brc.phone2": "Софійський офіс, міський 1: +359 2 4923 040",
+      "brc.phone3": "Софійський офіс, міський 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "Email: tracing@redcross.bg",
+      "field.title": "Протокол направлення польової групи",
+      "field.desc": "Зверніться до вашого польового координатора RFL або безпосередньо до Служби розшуку Болгарського Червоного Хреста для передачі справи:",
+      "field.call": "Зателефонувати в розшук БЧХ: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    ar: {
+      "header.title": "أداة الفرز الأولي RFL",
+      "header.subtitle": "الفحص السريع لاستعادة روابط الأسرة",
+      "privacy": "تقليل البيانات: لا تُدخل الأسماء أو الهويات أو التواريخ الشخصية.",
+      "step0.badge": "الإعداد والموافقة",
+      "step0.title": "1. اختر الوضع التشغيلي",
+      "step0.hint": "اختر مكان إجراء الفحص لتخصيص جهات الإحالة.",
+      "step0.opt.brc.title": "مكتب الصليب الأحمر البلغاري / الهاتف",
+      "step0.opt.brc.desc": "المقر الرئيسي في صوفيا، فرع إقليمي، أو استقبال هاتفي/Viber/WhatsApp.",
+      "step0.opt.field.title": "الميدان / العبور / نقطة الحدود",
+      "step0.opt.field.desc": "فريق متنقل، نقطة خدمة إنسانية، أو مركز استقبال.",
+      "step0.consent.title": "2. الموافقة الشفهية المستنيرة",
+      "step0.consent.hint": "اشرح: \"خدمات RFL للصليب الأحمر مجانية وسرية ومحايدة ومنفصلة عن سلطات الحدود أو اللجوء. هل توافق على الإجابة عن بعض الأسئلة السريعة؟\"",
+      "step0.consent.check.title": "يمنح الشخص موافقة مستنيرة للمتابعة",
+      "step0.consent.check.desc": "مطلوب قبل متابعة الفحص.",
+      "btn.start": "ابدأ الفحص →",
+      "btn.back": "← رجوع",
+      "btn.continue": "متابعة →",
+      "btn.result": "عرض نتيجة الفرز →",
+      "btn.reset": "مسح وبدء تقييم جديد",
+      "step1.badge": "المرحلة 1 من 4 • الأهلية",
+      "step1.title": "فحص العلاقة والانفصال",
+      "step1.hint": "من يبحث عنه الشخص، وكيف انقطع الاتصال؟",
+      "step1.opt.eligible.title": "فرد من الأسرة المقربة وفقدان غير طوعي للاتصال",
+      "step1.opt.eligible.desc": "الزوج/الزوجة، الطفل، الوالد، الأخ/الأخت، أو المُعال، منفصلون بسبب النزاع أو العبور أو الكارثة أو الاحتجاز.",
+      "step1.opt.non.title": "انفصال طوعي، استفسار تأشيرة/قانوني، أو غير أسرة",
+      "step1.opt.non.desc": "الأقارب يرفضون الاتصال، أو يسعون لتأشيرة لم الشمل، أو يبحثون عن أصدقاء/جيران.",
+      "step2.badge": "المرحلة 2 من 4 • الاستعجال",
+      "step2.title": "علامات الضعف الحرجة",
+      "step2.hint": "اختر جميع الحالات المنطبقة الآن (إن وجدت):",
+      "step2.opt.uasc.title": "طفل غير مصحوب أو منفصل (تحت 18 سنة)",
+      "step2.opt.uasc.desc": "المتقدم أو القريب المفقود قاصر بمفرده.",
+      "step2.opt.medical.title": "حالة طبية طارئة / إعاقة شديدة / مسن",
+      "step2.opt.medical.desc": "حالة مهددة للحياة، حاجة عاجلة للدواء، أو مُعال ضعيف.",
+      "step2.opt.detention.title": "اشتباه بالاحتجاز أو الاعتقال أو الاختطاف",
+      "step2.opt.detention.desc": "يُعتقد أن الشخص محتجز لدى السلطات أو قوات الحدود أو جماعات مسلحة.",
+      "step2.opt.conflict.title": "نزاع مسلح نشط / غرق سفينة / صد على الحدود",
+      "step2.opt.conflict.desc": "انفصال مفاجئ خلال حالة طوارئ حادة مهددة للحياة.",
+      "step3.badge": "المرحلة 3 من 4 • الاتصال",
+      "step3.title": "هل يمكنهم الوصول إلى أسرتهم إذا أُعطوا هاتفاً؟",
+      "step3.hint": "حدد ما إذا كان هذا حاجزاً تقنياً أم حاجة حقيقية للبحث.",
+      "step3.opt.phone.title": "نعم — يعرفون الرقم/الحساب، لكن يفتقرون إلى الوصول",
+      "step3.opt.phone.desc": "بطارية فارغة، هاتف مفقود، لا شريحة/رصيد، أو لا Wi-Fi.",
+      "step3.opt.lost.title": "لا — الأرقام لا تعمل أو المكان غير معروف",
+      "step3.opt.lost.desc": "حاولوا الاتصال/المراسلة أو ليس لديهم تفاصيل اتصال فعالة.",
+      "step4.badge": "المرحلة 4 من 4 • سياق القضية",
+      "step4.title": "التسجيل السابق في الصليب الأحمر / اللجنة الدولية",
+      "step4.hint": "هل فُتح طلب بحث بالفعل في بلد آخر أو لدى اللجنة الدولية؟",
+      "step4.opt.no.title": "لم تُفتح قضية بحث سابقة",
+      "step4.opt.no.desc": "أول مرة لطلب مساعدة RFL من الصليب الأحمر / الهلال الأحمر.",
+      "step4.opt.yes.title": "نعم — مسجل بالفعل لدى الصليب الأحمر / اللجنة الدولية",
+      "step4.opt.yes.desc": "يحتاج إلى متابعة أو تحديث القضية أو نقل إلى بلغاريا.",
+      "step5.badge": "نتيجة الفرز",
+      "footer": "أداة فرز بدون حفظ للبيانات • لا تحفظ هذه الصفحة أو ترسل أي بيانات.",
+      "tier1.label": "المستوى 1 • حرج / عاجل",
+      "tier1.title": "تسليم فوري إلى مختص",
+      "tier1.triggered": "المُحفِّز:",
+      "tier1.flag.uasc": "قاصر غير مصحوب/منفصل",
+      "tier1.flag.medical": "ضعف طبي/عمري",
+      "tier1.flag.detention": "اشتباه احتجاز/اختطاف",
+      "tier1.flag.conflict": "نزاع نشط/انفصال على الحدود",
+      "tier1.action1": "لا تتأخر: قم بتسليم فوري (هاتفياً أو شخصياً) إلى عامل حالة RFL مدرب أو ضابط حماية.",
+      "tier1.action2": "حماية الطفل: إذا كان هناك قاصر غير مصحوب، أبلغ فوراً بروتوكولات حماية الطفل / الوكالة الوطنية لحماية الطفل.",
+      "tier1.action3": "السلامة أولاً: لا تسجل تفاصيل حساسة على هواتف شخصية غير مشفرة.",
+      "tier2.label": "المستوى 2 • دعم الاتصال",
+      "tier2.title": "توفير وصول فوري إلى الهاتف / Wi-Fi",
+      "tier2.desc": "لا حاجة لقضية بحث رسمية الآن — الشخص يفتقر فقط إلى أدوات الاتصال.",
+      "tier2.action1": "مكالمة / رسالة مجانية: اعرض 3–5 دقائق مكالمة مجانية أو رسالة WhatsApp/Viber أو وصول Wi-Fi في نقطة الخدمة.",
+      "tier2.action2": "شحن الجهاز: وفّر الوصول إلى محطة شحن إذا كانت بطارية هاتفهم فارغة.",
+      "tier2.action3": "أعد التقييم إذا لزم: إذا كان رقم الأسرة مغلقاً أو لا يرد، أعد الفحص كمستوى 3 بحث قياسي.",
+      "tier3.label": "المستوى 3 • البحث القياسي",
+      "tier3.title": "جدولة مقابلة RFL رسمية",
+      "tier3.desc": "انفصال أسري غير طوعي مؤهل مع أمان فوري مستقر.",
+      "tier3.prior.yes": "قضية موجودة: اسأل إذا كان لديهم رقم مرجعي لقضية ICRC/الصليب الأحمر حتى يتمكن BRC من طلب نقل الملف عبر الحدود في FL Answers.",
+      "tier3.prior.no": "ملف بحث جديد: جدولة مقابلة RFL كاملة لجمع بيانات سيرة مفصلة وموافقة موقعة على حماية البيانات.",
+      "tier3.action.self": "فحص ذاتي: اذكر معرض الصور العام Trace the Face للصليب الأحمر لطرق الهجرة الأوروبية.",
+      "tier3.action.privacy": "حماية الخصوصية: تُملأ النماذج الكاملة فقط من قبل موظفي RFL المعتمدين في بيئة خاصة.",
+      "tier4.label": "المستوى 4 • المعلومات والإحالة",
+      "tier4.title": "دعم خارج RFL / إرشاد عام",
+      "tier4.desc": "لا يستوفي معايير البحث RFL (انفصال طوعي، مسألة قانونية/تأشيرة، أو غير أسرة).",
+      "tier4.action1": "اشرح النطاق: اشرح بأدب أن بحث الصليب الأحمر ينطبق فقط على الانفصال غير الطوعي لأفراد الأسرة المقربة.",
+      "tier4.action2": "إحالات قانونية / لجوء: لتأشيرات لم الشمل أو إجراءات الإقامة، راجع خدمة اللاجئين والمهاجرين للصليب الأحمر البلغاري أو شركاء المساعدة القانونية (مثل BHC / FAR).",
+      "tier4.action3": "أدوات الخدمة الذاتية: شارك نصائح وسائل التواصل الاجتماعي العامة أو مجموعات المجتمع إذا كانوا يبحثون عن معارف.",
+      "brc.title": "مكتب RFL الصليب الأحمر البلغاري والخط الساخن",
+      "brc.address": "العنوان: 76 جيمس بورشيه بوليفارد، 1407 صوفيا، بلغاريا",
+      "brc.phone1": "الجوال الأساسي للبحث: +359 88 866 80 58",
+      "brc.phone2": "مكتب صوفيا أرضي 1: +359 2 4923 040",
+      "brc.phone3": "مكتب صوفيا أرضي 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "البريد الإلكتروني: tracing@redcross.bg",
+      "field.title": "بروتوكول إحالة الفريق الميداني",
+      "field.desc": "صعّد إلى نقطة الاتصال الميدانية RFL أو اتصل مباشرة بخدمة البحث للصليب الأحمر البلغاري لتسليم القضية:",
+      "field.call": "اتصل ببحث BRC: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    fa: {
+      "header.title": "ابزار تریاژ RFL",
+      "header.subtitle": "غربالگری سریع بازیابی پیوندهای خانواده",
+      "privacy": "کمینه‌سازی داده: نام، شناسه یا تاریخچه شخصی وارد نکنید.",
+      "step0.badge": "تنظیمات و رضایت",
+      "step0.title": "۱. وضعیت عملیاتی را انتخاب کنید",
+      "step0.hint": "محل غربالگری را انتخاب کنید تا مخاطبین ارجاع تنظیم شوند.",
+      "step0.opt.brc.title": "دفتر صلیب سرخ بلغارستان / تلفن",
+      "step0.opt.brc.desc": "ستاد صوفیه، شعبه منطقه‌ای، یا پذیرش تلفنی/Viber/WhatsApp.",
+      "step0.opt.field.title": "میدان / ترانزیت / نقطه مرزی",
+      "step0.opt.field.desc": "تیم سیار، نقطه خدمات بشردوستانه، یا مرکز پذیرش.",
+      "step0.consent.title": "۲. رضایت شفاهی آگاهانه",
+      "step0.consent.hint": "توضیح دهید: \"خدمات RFL صلیب سرخ رایگان، محرمانه، بی‌طرف و جدا از مقامات مرزی یا پناهندگی است. آیا موافقید به چند سؤال کوتاه پاسخ دهید؟\"",
+      "step0.consent.check.title": "شخص رضایت آگاهانه برای ادامه می‌دهد",
+      "step0.consent.check.desc": "قبل از ادامه غربالگری الزامی است.",
+      "btn.start": "شروع غربالگری →",
+      "btn.back": "← بازگشت",
+      "btn.continue": "ادامه →",
+      "btn.result": "مشاهده نتیجه تریاژ →",
+      "btn.reset": "پاک کردن و شروع ارزیابی جدید",
+      "step1.badge": "مرحله ۱ از ۴ • واجد شرایط بودن",
+      "step1.title": "بررسی رابطه و جدایی",
+      "step1.hint": "فرد به دنبال چه کسی است و ارتباط چگونه قطع شد؟",
+      "step1.opt.eligible.title": "عضو نزدیک خانواده و از دست دادن غیرارادی ارتباط",
+      "step1.opt.eligible.desc": "همسر، فرزند، والد، خواهر/برادر، یا وابسته قانونی که به دلیل درگیری، ترانزیت، بلایا یا بازداشت جدا شده‌اند.",
+      "step1.opt.non.title": "جدایی داوطلبانه، استعلام ویزا/قانونی، یا غیرخانواده",
+      "step1.opt.non.desc": "اقوام از تماس امتناع می‌کنند، به دنبال ویزای الحاق خانواده، یا جستجوی دوستان/همسایگان هستند.",
+      "step2.badge": "مرحله ۲ از ۴ • فوریت",
+      "step2.title": "نشانه‌های آسیب‌پذیری بحرانی",
+      "step2.hint": "همه شرایطی که اکنون اعمال می‌شود را انتخاب کنید (در صورت وجود):",
+      "step2.opt.uasc.title": "کودک بدون همراه یا جدا شده (زیر ۱۸ سال)",
+      "step2.opt.uasc.desc": "متقاضی یا قریب مفقود، خردسال تنهاست.",
+      "step2.opt.medical.title": "فوریت پزشکی / ناتوانی شدید / سالمند",
+      "step2.opt.medical.desc": "وضعیت تهدیدکننده زندگی، نیاز فوری به دارو، یا وابسته آسیب‌پذیر.",
+      "step2.opt.detention.title": "بازداشت، دستگیری یا آدم‌ربایی مشکوک",
+      "step2.opt.detention.desc": "گمان می‌رود توسط مقامات، نیروهای مرزی یا گروه‌های مسلح نگه داشته می‌شود.",
+      "step2.opt.conflict.title": "درگیری مسلحانه فعال / غرق کشتی / پس‌راندن در مرز",
+      "step2.opt.conflict.desc": "جدایی ناگهانی در طول فوریت حاد تهدیدکننده زندگی.",
+      "step3.badge": "مرحله ۳ از ۴ • اتصال",
+      "step3.title": "آیا در صورت داشتن تلفن می‌توانند به خانواده‌شان برسند؟",
+      "step3.hint": "تعیین کنید که این یک مانع فنی است یا نیاز واقعی به ردیابی.",
+      "step3.opt.phone.title": "بله — شماره/حساب را می‌دانند، فقط دسترسی ندارند",
+      "step3.opt.phone.desc": "باتری خالی، تلفن گم‌شده، بدون سیم‌کارت/اعتبار، یا بدون Wi-Fi.",
+      "step3.opt.lost.title": "خیر — شماره‌ها کار نمی‌کنند یا محل نامعلوم است",
+      "step3.opt.lost.desc": "تلاش کرده‌اند تماس بگیرند/پیام دهند یا جزئیات تماس فعال ندارند.",
+      "step4.badge": "مرحله ۴ از ۴ • زمینه پرونده",
+      "step4.title": "ثبت‌نام قبلی صلیب سرخ / کمیته بین‌المللی",
+      "step4.hint": "آیا قبلاً درخواست ردیابی در کشور دیگری یا با ICRC باز شده است؟",
+      "step4.opt.no.title": "هیچ پرونده ردیابی قبلی باز نشده است",
+      "step4.opt.no.desc": "اولین بار درخواست کمک RFL صلیب سرخ / هلال احمر.",
+      "step4.opt.yes.title": "بله — قبلاً در صلیب سرخ / ICRC ثبت‌نام شده",
+      "step4.opt.yes.desc": "نیاز به پیگیری، به‌روزرسانی پرونده یا انتقال به بلغارستان.",
+      "step5.badge": "نتیجه تریاژ",
+      "footer": "ابزار تریاژ بدون ذخیره داده • این صفحه هیچ داده‌ای ذخیره یا ارسال نمی‌کند.",
+      "tier1.label": "سطح ۱ • بحرانی / فوری",
+      "tier1.title": "تحویل فوری به متخصص",
+      "tier1.triggered": "محرک:",
+      "tier1.flag.uasc": "خردسال بدون همراه/جدا شده",
+      "tier1.flag.medical": "آسیب‌پذیری پزشکی/سنی",
+      "tier1.flag.detention": "بازداشت/آدم‌ربایی مشکوک",
+      "tier1.flag.conflict": "درگیری فعال/جدایی مرزی",
+      "tier1.action1": "تأخیر نکنید: تحویل فوری (تلفنی یا حضوری) به مددکار RFL آموزش‌دیده یا افسر حفاظت.",
+      "tier1.action2": "حمایت از کودک: اگر خردسال بدون همراه دخیل است، فوراً پروتکل‌های حمایت از کودک را اطلاع دهید.",
+      "tier1.action3": "ایمنی اول: جزئیات حساس را روی تلفن‌های شخصی رمزنگاری‌نشده ثبت نکنید.",
+      "tier2.label": "سطح ۲ • پشتیبانی اتصال",
+      "tier2.title": "دسترسی فوری به تلفن / Wi-Fi فراهم کنید",
+      "tier2.desc": "اکنون پرونده ردیابی رسمی لازم نیست — شخص فقط ابزار ارتباطی ندارد.",
+      "tier2.action1": "تماس / پیام رایگان: ۳–۵ دقیقه تماس رایگان، پیام WhatsApp/Viber یا دسترسی Wi-Fi در نقطه خدمات ارائه دهید.",
+      "tier2.action2": "شارژ دستگاه: در صورت خالی بودن باتری، دسترسی به ایستگاه شارژ فراهم کنید.",
+      "tier2.action3": "در صورت نیاز دوباره ارزیابی کنید: اگر شماره خانواده قطع یا بی‌پاسخ است، به عنوان سطح ۳ ردیابی استاندارد دوباره غربالگری کنید.",
+      "tier3.label": "سطح ۳ • ردیابی استاندارد",
+      "tier3.title": "مصاحبه رسمی RFL را برنامه‌ریزی کنید",
+      "tier3.desc": "جدایی غیرارادی خانواده واجد شرایط با ایمنی فوری پایدار.",
+      "tier3.prior.yes": "پرونده موجود: بپرسید آیا شماره مرجع پرونده ICRC/صلیب سرخ دارند تا BRC بتواند انتقال فرامرزی پرونده را در FL Answers درخواست کند.",
+      "tier3.prior.no": "پرونده ردیابی جدید: مصاحبه کامل RFL برای جمع‌آوری داده‌های بیوگرافی دقیق و رضایت امضا شده حفاظت داده برنامه‌ریزی کنید.",
+      "tier3.action.self": "خودردیابی: گالری عمومی Trace the Face صلیب سرخ برای مسیرهای مهاجرت اروپایی را ذکر کنید.",
+      "tier3.action.privacy": "حفاظت از حریم خصوصی: فرم‌های کامل فقط توسط کارکنان مجاز RFL در محیط خصوصی تکمیل شود.",
+      "tier4.label": "سطح ۴ • اطلاعات و ارجاع",
+      "tier4.title": "پشتیبانی خارج از RFL / راهنمایی عمومی",
+      "tier4.desc": "معیارهای ردیابی RFL را برآورده نمی‌کند (جدایی داوطلبانه، موضوع قانونی/ویزا، یا غیرخانواده).",
+      "tier4.action1": "دامنه را توضیح دهید: مؤدبانه توضیح دهید که ردیابی صلیب سرخ فقط برای جدایی غیرارادی اعضای نزدیک خانواده اعمال می‌شود.",
+      "tier4.action2": "ارجاعات حقوقی / پناهندگی: برای ویزای الحاق خانواده یا رویه‌های اقامت، به خدمات پناهندگان-مهاجران صلیب سرخ بلغارستان یا شرکای کمک حقوقی (مانند BHC / FAR) مراجعه کنید.",
+      "tier4.action3": "ابزارهای خودخدمتی: اگر به دنبال آشنایان هستند، نکات رسانه‌های اجتماعی عمومی یا گروه‌های اجتماعی را به اشتراک بگذارید.",
+      "brc.title": "دفتر RFL صلیب سرخ بلغارستان و خط تلفن",
+      "brc.address": "آدرس: بلوار جیمز بورچیه ۷۶، ۱۴۰۷ صوفیه، بلغارستان",
+      "brc.phone1": "موبایل اصلی ردیابی: +359 88 866 80 58",
+      "brc.phone2": "دفتر صوفیه ثابت ۱: +359 2 4923 040",
+      "brc.phone3": "دفتر صوفیه ثابت ۲: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "ایمیل: tracing@redcross.bg",
+      "field.title": "پروتکل ارجاع تیم میدانی",
+      "field.desc": "به نقطه کانونی RFL میدانی خود ارتقا دهید یا مستقیماً با خدمات ردیابی صلیب سرخ بلغارستان برای تحویل پرونده تماس بگیرید:",
+      "field.call": "تماس با ردیابی BRC: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    ku: {
+      "header.title": "Amûra Trîaja RFL",
+      "header.subtitle": "Skrîna Bilez a Vegerandina Girêdanên Malbatê",
+      "privacy": "Kêmbûna Daneyan: Nav, nasname an dîroka kesane têkevin.",
+      "step0.badge": "Sazkirin û Razîbûn",
+      "step0.title": "1. Rewşa Operasyonel Hilbijêrin",
+      "step0.hint": "Cihê vê skrînê hilbijêrin da ku têkilîên referansê li hev bînin.",
+      "step0.opt.brc.title": "Ofîsa Xaça Sor a Bulgarî / Telefon",
+      "step0.opt.brc.desc": "Navenda Sûfiyayê, şaxa herêmî, an wergirtina têlefon/Viber/WhatsApp.",
+      "step0.opt.field.title": "Qada / Derbasbûn / Xala Sînor",
+      "step0.opt.field.desc": "Tîma gerok, Xala Xizmeta Mirovî, an navenda wergirtinê.",
+      "step0.consent.title": "2. Razîbûna Devkî ya Agahdar",
+      "step0.consent.hint": "Rave bikin: \"Xizmetên RFL yên Xaça Sor belaş, nepenî, bêalî û ji rayedarên sînor an penaberiyê cuda ne. Ma hûn qayîl in ku bersiva çend pirsên bilez bidin?\"",
+      "step0.consent.check.title": "Kes razîbûna agahdar dide ku bidome",
+      "step0.consent.check.desc": "Berî berdewamkirina skrînê pêwîst e.",
+      "btn.start": "Destpêkirina Skrînê →",
+      "btn.back": "← Paş",
+      "btn.continue": "Bidome →",
+      "btn.result": "Encama Trîajê Bibîne →",
+      "btn.reset": "Paqij bike & Destpêka Nirxandina Nû",
+      "step1.badge": "Qonaxa 1 ji 4 • Destûrbûn",
+      "step1.title": "Kontrola Têkilî û Veqetînê",
+      "step1.hint": "Kes li kê digere û têkilî çawa qut bû?",
+      "step1.opt.eligible.title": "Endamê nêzîk ê malbatê & windabûna nehewce ya têkilî",
+      "step1.opt.eligible.desc": "Hevjîn, zarok, dê/bav, xwişk/bira, an şagirtê qanûnî yê ji ber pevçûn, derbasbûn, karesat an girtinê veqetiyane.",
+      "step1.opt.non.title": "Veqetîna dilxwazî, lêpirsîna vîze/qanûnî, an ne-malbat",
+      "step1.opt.non.desc": "Xizm têkilî red dikin, li vîzeya yekgirtina malbatê digerin, an li heval/cîran digerin.",
+      "step2.badge": "Qonaxa 2 ji 4 • Lezayî",
+      "step2.title": "Nîşaneyên Qelsiya Krîtîk",
+      "step2.hint": "Hemû mercên ku niha derbas dibin hilbijêrin (heke hebin):",
+      "step2.opt.uasc.title": "Zarokê Bêserûber an Veqetandî (Di bin 18 salî de)",
+      "step2.opt.uasc.desc": "Serlêder an xizmê winda bi tenê zarokek e.",
+      "step2.opt.medical.title": "Lezgîniya Bijîşkî / Kêmasiya Giran / Kal",
+      "step2.opt.medical.desc": "Rewşa jiyanê tehdît dike, hewcedariya bilez a dermanan, an şagirtê qels.",
+      "step2.opt.detention.title": "Girtin, Desteserkirin an Revandin a Gumanbar",
+      "step2.opt.detention.desc": "Tê bawer kirin ku ji hêla rayedaran, hêzên sînor an komên çekdar ve tê girtin.",
+      "step2.opt.conflict.title": "Pevçûna Çekdarî ya Çalak / Noxwarkirina Keştiyê / Paşxistina Sînor",
+      "step2.opt.conflict.desc": "Veqetîna nişkî di dema rewşa awarte ya jiyanê de.",
+      "step3.badge": "Qonaxa 3 ji 4 • Têkilî",
+      "step3.title": "Ma heke telefonek were dayîn dikarin bigihîjin malbata xwe?",
+      "step3.hint": "Diyar bikin ka ev astengek teknîkî ye an hewcedariyek rastîn a lêgerînê ye.",
+      "step3.opt.phone.title": "Erê — jimare/hesab dizanin, tenê gihîştinê nakin",
+      "step3.opt.phone.desc": "Bataryaya vala, telefona winda, bê SIM/kredî, an bê Wi-Fi.",
+      "step3.opt.lost.title": "Na — jimare naxebitin an cih nayê zanîn",
+      "step3.opt.lost.desc": "Ceribandine ku telefonê bikin/an peyamê bişînin an agahdariya têkiliyê ya xebatkar nînin.",
+      "step4.badge": "Qonaxa 4 ji 4 • Çarçoveya Dozê",
+      "step4.title": "Tomarkirina Berê ya Xaça Sor / ICRC",
+      "step4.hint": "Ma berê daxwaznameyek lêgerînê li welatek din an bi ICRC re hatîye vekirin?",
+      "step4.opt.no.title": "Tu doza lêgerînê ya berê nehatiye vekirin",
+      "step4.opt.no.desc": "Cara yekem daxwaza alîkariya RFL ya Xaça Sor / Heyva Sor.",
+      "step4.opt.yes.title": "Erê — berê li Xaça Sor / ICRC tomarkirî ye",
+      "step4.opt.yes.desc": "Pêdivî bi şopandin, nûvekirina dozê, an veguheztina bo Bulgaristanê heye.",
+      "step5.badge": "Encama Trîajê",
+      "footer": "Amûra Trîajê ya Bê Daneyan • Ev rûpel tu daneyan naparêze an naşîne.",
+      "tier1.label": "Asta 1 • Krîtîk / Lezgîn",
+      "tier1.title": "Radestkirina Lezgîn a Pispor",
+      "tier1.triggered": "Ji ber:",
+      "tier1.flag.uasc": "Zarokê bêserûber/veqetandî",
+      "tier1.flag.medical": "Qelsiya bijîşkî/kal",
+      "tier1.flag.detention": "Girtin/revandina gumanbar",
+      "tier1.flag.conflict": "Pevçûna çalak/veqetîna sînor",
+      "tier1.action1": "Paş nexe: Radestkirina lezgîn (bi telefon an bi kesane) ji karmendek RFL perwerdekirî an efserê parastinê re bike.",
+      "tier1.action2": "Parastina Zarokan: Heke zarokek bêserûber be, protokolên Parastina Zarokan tavilê agahdar bike.",
+      "tier1.action3": "Ewlehî Pêşî: Hûrguliyên hestiyar li ser têlefonên kesane yên neşîfrekirî tomar neke.",
+      "tier2.label": "Asta 2 • Piştgiriya Têkilî",
+      "tier2.title": "Gihîştina Lezgîn a Telefon / Wi-Fi Peşkêş Bike",
+      "tier2.desc": "Niha doza fermî ya lêgerînê ne pêwîst e — tenê amûrên ragihandinê kêm in.",
+      "tier2.action1": "Telefon / Peyama Belaş: 3–5 deqîqe telefon belaş, peyama WhatsApp/Viber, an gihîştina Wi-Fi li xala xizmetê pêşkêş bike.",
+      "tier2.action2": "Şarjkirina Amûrê: Heke bataryaya têlefonê vala be, gihîştina stasyona şarjê peyda bike.",
+      "tier2.action3": "Heke Pêwîst Be Dîsa Binirxîne: Heke jimareya malbatê qut be an bersiv nede, wekî Asta 3 Lêgerîna Standard dîsa skrînê bike.",
+      "tier3.label": "Asta 3 • Lêgerîna Standard",
+      "tier3.title": "Hevpeyvîna Fermî ya RFL Saz Bike",
+      "tier3.desc": "Veqetîna malbatê ya nehewce ya bijarte bi ewlehiya lezgîn a aram.",
+      "tier3.prior.yes": "Doza Heyî: Pirs bike ka hejmara referansa doza ICRC/Xaça Sor heye da ku BRC bikaribe veguheztina pelê ya sînor di FL Answers de daxwaz bike.",
+      "tier3.prior.no": "Pelê Lêgerîna Nû: Hevpeyvîna RFL ya tevahî saz bike da ku daneyên jîyannameyê yên berfireh û razîbûna parastina daneyan a îmzekirî berhev bike.",
+      "tier3.action.self": "Xwe-Lêgerîn: Galeriya wêneyan a gelemperî ya Xaça Sor Trace the Face ji bo rêyên koçberiyê yên Ewropî bibêje.",
+      "tier3.action.privacy": "Nepeniyê Biparêze: Formên tevahî tenê ji hêla karmendên destûrdar ên RFL ve di cîhek taybet de têne dagirtin.",
+      "tier4.label": "Asta 4 • Agahdarî & Referans",
+      "tier4.title": "Piştgiriya Derveyî RFL / Rêbernameya Giştî",
+      "tier4.desc": "Pêdiviyên lêgerîna RFL pêk nayîne (veqetîna dilxwazî, mijara qanûnî/vîze, an ne-malbat).",
+      "tier4.action1": "Çarçoveyê Rave Bike: Bi dilovanî rave bike ku lêgerîna Xaça Sor tenê ji bo veqetîna nehewce ya endamên nêzîk ên malbatê derbas dibe.",
+      "tier4.action2": "Referansên Qanûnî / Penaberiyê: Ji bo vîzeyên yekgirtina malbatê an pêvajoyên rûniştinê, serî li Xizmeta Penaber-Koçber a Xaça Sor a Bulgarî an hevkarên alîkariya qanûnî (mînak BHC / FAR) bide.",
+      "tier4.action3": "Amûrên Xwe-Xizmetê: Heke li nasan digerin, serişteyên medyaya civakî an komên civakê parve bike.",
+      "brc.title": "Ofîsa RFL ya Xaça Sor a Bulgarî & Xeta Germ",
+      "brc.address": "Navnîşan: 76 James Bourchier Blvd., 1407 Sofya, Bulgaristan",
+      "brc.phone1": "Mobîla Lêgerînê ya Seretayî: +359 88 866 80 58",
+      "brc.phone2": "Ofîsa Sofyayê ya Erdî 1: +359 2 4923 040",
+      "brc.phone3": "Ofîsa Sofyayê ya Erdî 2: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "Email: tracing@redcross.bg",
+      "field.title": "Protokola Referansa Tîma Qadê",
+      "field.desc": "Berbi Xala Navendî ya RFL ya Qadê bilind bike an rasterast bi Karûbarê Lêgerîna Xaça Sor a Bulgarî re têkilî dayîne ji bo radestkirina dozê:",
+      "field.call": "Gazî Lêgerîna BRC bike: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    prs: {
+      "header.title": "ابزار تریاژ RFL",
+      "header.subtitle": "غربالگری سریع بازیابی پیوندهای خانوادگی",
+      "privacy": "کاهش داده‌ها: نام، شناسه یا تاریخچه شخصی وارد نکنید.",
+      "step0.badge": "تنظیمات و رضایت",
+      "step0.title": "۱. وضعیت عملیاتی را انتخاب کنید",
+      "step0.hint": "محل انجام غربالگری را انتخاب کنید تا مخاطبین ارجاع تنظیم شوند.",
+      "step0.opt.brc.title": "دفتر صلیب سرخ بلغارستان / تلفن",
+      "step0.opt.brc.desc": "مرکز صوفیه، شعبه منطقه‌ای، یا پذیرش تلفنی/Viber/WhatsApp.",
+      "step0.opt.field.title": "میدان / ترانزیت / نقطه مرزی",
+      "step0.opt.field.desc": "تیم سیار، نقطه خدمات بشردوستانه، یا مرکز پذیرش.",
+      "step0.consent.title": "۲. رضایت شفاهی آگاهانه",
+      "step0.consent.hint": "توضیح دهید: \"خدمات RFL صلیب سرخ رایگان، محرمانه، بی‌طرف و جدا از مقامات مرزی یا پناهندگی است. آیا موافقید به چند سؤال کوتاه پاسخ دهید؟\"",
+      "step0.consent.check.title": "شخص رضایت آگاهانه برای ادامه می‌دهد",
+      "step0.consent.check.desc": "قبل از ادامه غربالگری ضروری است.",
+      "btn.start": "شروع غربالگری →",
+      "btn.back": "← بازگشت",
+      "btn.continue": "ادامه →",
+      "btn.result": "مشاهده نتیجه تریاژ →",
+      "btn.reset": "پاک کردن و شروع ارزیابی جدید",
+      "step1.badge": "مرحله ۱ از ۴ • واجد شرایط بودن",
+      "step1.title": "بررسی رابطه و جدایی",
+      "step1.hint": "فرد به دنبال چه کسی است و ارتباط چگونه قطع شد؟",
+      "step1.opt.eligible.title": "عضو نزدیک خانواده و از دست دادن غیرارادی ارتباط",
+      "step1.opt.eligible.desc": "همسر، فرزند، والد، خواهر/برادر، یا وابسته قانونی که به دلیل درگیری، ترانزیت، بلایا یا بازداشت جدا شده‌اند.",
+      "step1.opt.non.title": "جدایی داوطلبانه، استعلام ویزا/قانونی، یا غیرخانواده",
+      "step1.opt.non.desc": "اقوام از تماس امتناع می‌کنند، به دنبال ویزای الحاق خانواده، یا جستجوی دوستان/همسایگان هستند.",
+      "step2.badge": "مرحله ۲ از ۴ • فوریت",
+      "step2.title": "نشانه‌های آسیب‌پذیری بحرانی",
+      "step2.hint": "همه شرایطی که اکنون اعمال می‌شود را انتخاب کنید (در صورت وجود):",
+      "step2.opt.uasc.title": "کودک بدون همراه یا جدا شده (زیر ۱۸ سال)",
+      "step2.opt.uasc.desc": "متقاضی یا قریب مفقود، خردسال تنهاست.",
+      "step2.opt.medical.title": "فوریت پزشکی / ناتوانی شدید / سالمند",
+      "step2.opt.medical.desc": "وضعیت تهدیدکننده زندگی، نیاز فوری به دارو، یا وابسته آسیب‌پذیر.",
+      "step2.opt.detention.title": "بازداشت، دستگیری یا آدم‌ربایی مشکوک",
+      "step2.opt.detention.desc": "گمان می‌رود توسط مقامات، نیروهای مرزی یا گروه‌های مسلح نگه داشته می‌شود.",
+      "step2.opt.conflict.title": "درگیری مسلحانه فعال / غرق کشتی / پس‌راندن در مرز",
+      "step2.opt.conflict.desc": "جدایی ناگهانی در طول فوریت حاد تهدیدکننده زندگی.",
+      "step3.badge": "مرحله ۳ از ۴ • اتصال",
+      "step3.title": "آیا در صورت داشتن تلفن می‌توانند به خانواده‌شان برسند؟",
+      "step3.hint": "تعیین کنید که این یک مانع فنی است یا نیاز واقعی به ردیابی.",
+      "step3.opt.phone.title": "بله — شماره/حساب را می‌دانند، فقط دسترسی ندارند",
+      "step3.opt.phone.desc": "باتری خالی، تلفن گم‌شده، بدون سیم‌کارت/اعتبار، یا بدون Wi-Fi.",
+      "step3.opt.lost.title": "خیر — شماره‌ها کار نمی‌کنند یا محل نامعلوم است",
+      "step3.opt.lost.desc": "تلاش کرده‌اند تماس بگیرند/پیام دهند یا جزئیات تماس فعال ندارند.",
+      "step4.badge": "مرحله ۴ از ۴ • زمینه پرونده",
+      "step4.title": "ثبت‌نام قبلی صلیب سرخ / کمیته بین‌المللی",
+      "step4.hint": "آیا قبلاً درخواست ردیابی در کشور دیگری یا با ICRC باز شده است؟",
+      "step4.opt.no.title": "هیچ پرونده ردیابی قبلی باز نشده است",
+      "step4.opt.no.desc": "اولین بار درخواست کمک RFL صلیب سرخ / هلال احمر.",
+      "step4.opt.yes.title": "بله — قبلاً در صلیب سرخ / ICRC ثبت‌نام شده",
+      "step4.opt.yes.desc": "نیاز به پیگیری، به‌روزرسانی پرونده یا انتقال به بلغارستان.",
+      "step5.badge": "نتیجه تریاژ",
+      "footer": "ابزار تریاژ بدون ذخیره داده • این صفحه هیچ داده‌ای ذخیره یا ارسال نمی‌کند.",
+      "tier1.label": "سطح ۱ • بحرانی / فوری",
+      "tier1.title": "تحویل فوری به متخصص",
+      "tier1.triggered": "محرک:",
+      "tier1.flag.uasc": "خردسال بدون همراه/جدا شده",
+      "tier1.flag.medical": "آسیب‌پذیری پزشکی/سنی",
+      "tier1.flag.detention": "بازداشت/آدم‌ربایی مشکوک",
+      "tier1.flag.conflict": "درگیری فعال/جدایی مرزی",
+      "tier1.action1": "تأخیر نکنید: تحویل فوری (تلفنی یا حضوری) به مددکار RFL آموزش‌دیده یا افسر حفاظت.",
+      "tier1.action2": "حمایت از کودک: اگر خردسال بدون همراه دخیل است، فوراً پروتکل‌های حمایت از کودک را اطلاع دهید.",
+      "tier1.action3": "ایمنی اول: جزئیات حساس را روی تلفن‌های شخصی رمزنگاری‌نشده ثبت نکنید.",
+      "tier2.label": "سطح ۲ • پشتیبانی اتصال",
+      "tier2.title": "دسترسی فوری به تلفن / Wi-Fi فراهم کنید",
+      "tier2.desc": "اکنون پرونده ردیابی رسمی لازم نیست — شخص فقط ابزار ارتباطی ندارد.",
+      "tier2.action1": "تماس / پیام رایگان: ۳–۵ دقیقه تماس رایگان، پیام WhatsApp/Viber یا دسترسی Wi-Fi در نقطه خدمات ارائه دهید.",
+      "tier2.action2": "شارژ دستگاه: در صورت خالی بودن باتری، دسترسی به ایستگاه شارژ فراهم کنید.",
+      "tier2.action3": "در صورت نیاز دوباره ارزیابی کنید: اگر شماره خانواده قطع یا بی‌پاسخ است، به عنوان سطح ۳ ردیابی استاندارد دوباره غربالگری کنید.",
+      "tier3.label": "سطح ۳ • ردیابی استاندارد",
+      "tier3.title": "مصاحبه رسمی RFL را برنامه‌ریزی کنید",
+      "tier3.desc": "جدایی غیرارادی خانواده واجد شرایط با ایمنی فوری پایدار.",
+      "tier3.prior.yes": "پرونده موجود: بپرسید آیا شماره مرجع پرونده ICRC/صلیب سرخ دارند تا BRC بتواند انتقال فرامرزی پرونده را در FL Answers درخواست کند.",
+      "tier3.prior.no": "پرونده ردیابی جدید: مصاحبه کامل RFL برای جمع‌آوری داده‌های بیوگرافی دقیق و رضایت امضا شده حفاظت داده برنامه‌ریزی کنید.",
+      "tier3.action.self": "خودردیابی: گالری عمومی Trace the Face صلیب سرخ برای مسیرهای مهاجرت اروپایی را ذکر کنید.",
+      "tier3.action.privacy": "حفاظت از حریم خصوصی: فرم‌های کامل فقط توسط کارکنان مجاز RFL در محیط خصوصی تکمیل شود.",
+      "tier4.label": "سطح ۴ • اطلاعات و ارجاع",
+      "tier4.title": "پشتیبانی خارج از RFL / راهنمایی عمومی",
+      "tier4.desc": "معیارهای ردیابی RFL را برآورده نمی‌کند (جدایی داوطلبانه، موضوع قانونی/ویزا، یا غیرخانواده).",
+      "tier4.action1": "دامنه را توضیح دهید: مؤدبانه توضیح دهید که ردیابی صلیب سرخ فقط برای جدایی غیرارادی اعضای نزدیک خانواده اعمال می‌شود.",
+      "tier4.action2": "ارجاعات حقوقی / پناهندگی: برای ویزای الحاق خانواده یا رویه‌های اقامت، به خدمات پناهندگان-مهاجران صلیب سرخ بلغارستان یا شرکای کمک حقوقی (مانند BHC / FAR) مراجعه کنید.",
+      "tier4.action3": "ابزارهای خودخدمتی: اگر به دنبال آشنایان هستند، نکات رسانه‌های اجتماعی عمومی یا گروه‌های اجتماعی را به اشتراک بگذارید.",
+      "brc.title": "دفتر RFL صلیب سرخ بلغارستان و خط تلفن",
+      "brc.address": "آدرس: بلوار جیمز بورچیه ۷۶، ۱۴۰۷ صوفیه، بلغارستان",
+      "brc.phone1": "موبایل اصلی ردیابی: +359 88 866 80 58",
+      "brc.phone2": "دفتر صوفیه ثابت ۱: +359 2 4923 040",
+      "brc.phone3": "دفتر صوفیه ثابت ۲: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "ایمیل: tracing@redcross.bg",
+      "field.title": "پروتکل ارجاع تیم میدانی",
+      "field.desc": "به نقطه کانونی RFL میدانی خود ارتقا دهید یا مستقیماً با خدمات ردیابی صلیب سرخ بلغارستان برای تحویل پرونده تماس بگیرید:",
+      "field.call": "تماس با ردیابی BRC: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    },
+    ps: {
+      "header.title": "د RFL فرنټ لاین ټریاژ وسیله",
+      "header.subtitle": "د کورنیو اړیکو د بیا رغولو ګړندی سکریننګ",
+      "privacy": "د معلوماتو کمول: نومونه، پیژندنې یا شخصي تاریخچې مه لیکئ.",
+      "step0.badge": "ترتیبات او رضایت",
+      "step0.title": "۱. عملیاتي حالت وټاکئ",
+      "step0.hint": "هغه ځای وټاکئ چې دا سکریننګ پکې کیږي ترڅو د ارجاع اړیکې تنظیم شي.",
+      "step0.opt.brc.title": "بلغاریایي سره صلیب دفتر / تلیفون",
+      "step0.opt.brc.desc": "د صوفیا مرکزي دفتر، سیمه ییز څانګه، یا د تلیفون/Viber/WhatsApp له لارې منل.",
+      "step0.opt.field.title": "میدان / ترانزیت / سرحدي نقطه",
+      "step0.opt.field.desc": "خوځنده ټیم، بشري خدمت نقطه، یا د منلو مرکز.",
+      "step0.consent.title": "۲. informed شفاهي رضایت",
+      "step0.consent.hint": "تشریح کړئ: \"د سره صلیب RFL خدمتونه وړیا، محرم، بې طرفه او د سرحد یا پناه غوښتنې چارواکو څخه جلا دي. ایا تاسو موافق یاست چې څو ګړندي پوښتنو ته ځواب ووایاست؟\"",
+      "step0.consent.check.title": "کسه د دوام لپاره informed رضایت ورکوي",
+      "step0.consent.check.desc": "د سکریننګ د دوام دمخه اړین دی.",
+      "btn.start": "سکریننګ پیل کړئ →",
+      "btn.back": "← شاته",
+      "btn.continue": "دوام →",
+      "btn.result": "د ټریاژ پایله وګورئ →",
+      "btn.reset": "پاک کړئ او نوی ارزونه پیل کړئ",
+      "step1.badge": "د ۴ مرحلو ۱ • وړتیا",
+      "step1.title": "اړیکه او جلاوالي چک",
+      "step1.hint": "شخص د چا په لټه کې دی او اړیکه څنګه پرې شوه؟",
+      "step1.opt.eligible.title": "نږدې کورنی غړی او غیر ارادي اړیکه له لاسه ورکول",
+      "step1.opt.eligible.desc": "میړه/ښځه، ماشوم، مور/پلار، خور/ورور، یا قانوني پالونکی چې د جګړې، ترانزیت، ناورین یا نیول کیدو له امله جلا شوي.",
+      "step1.opt.non.title": "رضاکارانه جلاوالي، ویزې/قانوني پوښتنه، یا غیر کورنی",
+      "step1.opt.non.desc": "خپلوان اړیکه ردوي، د کورنۍ یوځای کیدو ویزې غواړي، یا ملګري/ګاونډیان لټوي.",
+      "step2.badge": "د ۴ مرحلو ۲ • بیړنۍ",
+      "step2.title": "د نازکتیا مهمې نښې",
+      "step2.hint": "هغه ټول شرایط وټاکئ چې اوس پلي کیږي (که شتون ولري):",
+      "step2.opt.uasc.title": "بې همراه یا جلا شوی ماشوم (له ۱۸ کلونو کم)",
+      "step2.opt.uasc.desc": "غوښتونکی یا ورک شوی خپلوان یوازې ماشوم دی.",
+      "step2.opt.medical.title": "طبي بیړنی حالت / جدي معلولیت / زاړه",
+      "step2.opt.medical.desc": "د ژوند لپاره خطرناک حالت، د درملو بیړنۍ اړتیا، یا نازک پالونکی.",
+      "step2.opt.detention.title": "نیول، نیول کیدل یا تښتول شکمن",
+      "step2.opt.detention.desc": "باور کیږي چې د چارواکو، سرحدي ځواکونو یا وسله والو ډلو لخوا نیول شوی.",
+      "step2.opt.conflict.title": "فعاله وسله واله جګړه / کښتۍ ډوبیدل / د سرحد پسې ایستل",
+      "step2.opt.conflict.desc": "په حاد ژوند ګواښونکي حالت کې ناڅاپي جلاوالی.",
+      "step3.badge": "د ۴ مرحلو ۳ • اړیکه",
+      "step3.title": "ایا که تلیفون ورکړل شي کولای شي خپلې کورنۍ ته ورسیږي؟",
+      "step3.hint": "معلومه کړئ چې دا تخنیکي خنډ دی که د لټون ریښتینې اړتیا.",
+      "step3.opt.phone.title": "هو — شمیره/حساب پېژني، یوازې لاسرسی نلري",
+      "step3.opt.phone.desc": "خالي بیټرۍ، ورک شوی تلیفون، بې SIM/کریډیټ، یا بې Wi-Fi.",
+      "step3.opt.lost.title": "نه — شمیرې کار نه کوي یا ځای نامعلوم دی",
+      "step3.opt.lost.desc": "هڅه کړې چې زنګ ووهي/پیغام ولېږي یا فعاله د اړیکې توضیحات نلري.",
+      "step4.badge": "د ۴ مرحلو ۴ • د قضیې شرایط",
+      "step4.title": "پخوانی سره صلیب / ICRC ثبت",
+      "step4.hint": "ایا لا دمخه په بل هیواد کې یا له ICRC سره د لټون غوښتنه پرانیستل شوې؟",
+      "step4.opt.no.title": "هیڅ پخوانۍ لټون قضیه نه ده پرانیستل شوې",
+      "step4.opt.no.desc": "لومړی ځل د سره صلیب / سره میاشت RFL مرستې غوښتنه.",
+      "step4.opt.yes.title": "هو — لا دمخه په سره صلیب / ICRC ثبت شوی",
+      "step4.opt.yes.desc": "تعقیب، قضیې تازه کول، یا بلغاریا ته لیږد ته اړتیا لري.",
+      "step5.badge": "د ټریاژ پایله",
+      "footer": "د معلوماتو بې ذخیره ټریاژ وسیله • دا پاڼه هیڅ معلومات نه ذخیره کوي او نه لیږي.",
+      "tier1.label": "کچه ۱ • مهم / بیړنی",
+      "tier1.title": "بېړنی متخصص ته سپارل",
+      "tier1.triggered": "د دې لامل:",
+      "tier1.flag.uasc": "بې همراه/جلا شوی ماشوم",
+      "tier1.flag.medical": "طبي/عمری نازکتیا",
+      "tier1.flag.detention": "نیول/تښتول شکمن",
+      "tier1.flag.conflict": "فعاله جګړه/سرحدي جلاوالی",
+      "tier1.action1": "وخت مه ضایع کوئ: سمدلاسه (تلیفون یا په شخصي ډول) روزل شوي RFL کارکوونکي یا محافظت افسر ته وسپارئ.",
+      "tier1.action2": "د ماشوم محافظت: که بې همراه ماشوم شامل وي، سمدلاسه د ماشوم محافظت پروتوکولونه خبر کړئ.",
+      "tier1.action3": "لومړی خوندیتوب: حساس توضیحات په غیر کوډ شویو شخصي تلیفونونو کې مه ثبتوئ.",
+      "tier2.label": "کچه ۲ • د اړیکې ملاتړ",
+      "tier2.title": "سمدلاسه تلیفون / Wi-Fi لاسرسی چمتو کړئ",
+      "tier2.desc": "اوس رسمي لټون قضیه ته اړتیا نشته — شخص یوازې د اړیکې وسایل نلري.",
+      "tier2.action1": "وړیا زنګ / پیغام: ۳–۵ دقیقې وړیا زنګ، WhatsApp/Viber پیغام، یا په خدمت نقطه کې Wi-Fi لاسرسی وړاندې کړئ.",
+      "tier2.action2": "وسیله چارجول: که د دوی تلیفون بیټرۍ خالي وي، د چارج سټیشن ته لاسرسی ورکړئ.",
+      "tier2.action3": "که اړتیا وي بیا ارزونه وکړئ: که د کورنۍ شمیره قطع یا بې ځوابه وي، د کچه ۳ معیاري لټون په توګه بیا سکریننګ وکړئ.",
+      "tier3.label": "کچه ۳ • معیاري لټون",
+      "tier3.title": "رسمي RFL مرکه ترتیب کړئ",
+      "tier3.desc": "د کورنۍ غیر ارادي جلاوالی وړ دی د بېړني خوندیتوب سره.",
+      "tier3.prior.yes": "شته قضیه: وپوښتئ ایا د ICRC/سره صلیب قضیې حواله شمیره لري ترڅو BRC وکولای شي په FL Answers کې د پولې هاخوا دوتنه لیږد غوښتنه وکړي.",
+      "tier3.prior.no": "نوې لټون دوتنه: بشپړه RFL مرکه ترتیب کړئ ترڅو مفصل ژوندلیک معلومات او لاسلیک شوی د معلوماتو محافظت رضایت راټول شي.",
+      "tier3.action.self": "خپله لټون: د سره صلیب عامه Trace the Face انځورګالري د اروپایي کډوالۍ لارو لپاره یاد کړئ.",
+      "tier3.action.privacy": "محرمیت وساتئ: بشپړ فورمې یوازې مجاز RFL کارکوونکو لخوا په خصوصي ځای کې ډکې شي.",
+      "tier4.label": "کچه ۴ • معلومات او ارجاع",
+      "tier4.title": "د RFL څخه بهر ملاتړ / عمومي لارښود",
+      "tier4.desc": "د RFL لټون معیارونه نه پوره کوي (رضاکارانه جلاوالی، قانوني/ویزه مسله، یا غیر کورنی).",
+      "tier4.action1": "حدود تشریح کړئ: په ادب سره تشریح کړئ چې د سره صلیب لټون یوازې د نږدې کورنیو غړو غیر ارادي جلاوالي لپاره دی.",
+      "tier4.action2": "قانوني / پناه غوښتنې ارجاعات: د کورنۍ یوځای کیدو ویزې یا اوسیدو پروسیجرونو لپاره، د بلغاریایي سره صلیب کډوال-مهاجر خدمت یا قانوني مرستې شریکانو (لکه BHC / FAR) ته مراجعه وکړئ.",
+      "tier4.action3": "خپل خدمت وسیلې: که پیژندونکي لټوي، د عامه ټولنیزو رسنیو یا ټولنې ګروپونو لارښوونې شریکې کړئ.",
+      "brc.title": "بلغاریایي سره صلیب RFL دفتر او ګرمه کرښه",
+      "brc.address": "پته: 76 James Bourchier Blvd., 1407 صوفیا، بلغاریا",
+      "brc.phone1": "لومړنی لټون موبایل: +359 88 866 80 58",
+      "brc.phone2": "د صوفیا دفتر ځمکنی ۱: +359 2 4923 040",
+      "brc.phone3": "د صوفیا دفتر ځمکنی ۲: +359 2 4923 039",
+      "brc.whatsapp": "WhatsApp / Viber: +359 88 400 73 63",
+      "brc.email": "ایمیل: tracing@redcross.bg",
+      "field.title": "د میدان ټیم د ارجاع پروتوکول",
+      "field.desc": "خپل میداني RFL فوکل پواینټ ته لوړ کړئ یا مستقیم د بلغاریایي سره صلیب لټون خدمت سره د قضیې سپارلو لپاره اړیکه ونیسئ:",
+      "field.call": "BRC لټون ته زنګ ووهئ: +359 88 866 80 58",
+      "field.whatsapp": "WhatsApp / Viber: +359 88 400 73 63"
+    }
+  };
+
+  // ============================================================
+  //  STATE
+  // ============================================================
   const state = {
     setting: 'brc',
     eligibility: null,
     vulns: [],
     connectivity: null,
-    prior: null
+    prior: null,
+    lang: 'en'
   };
 
+  // ============================================================
+  //  i18n ENGINE
+  // ============================================================
+  function t(key) {
+    const dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+    return dict[key] || TRANSLATIONS.en[key] || key;
+  }
+
+  function applyLanguage(lang) {
+    state.lang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      el.textContent = t(key);
+    });
+    document.getElementById('headerTitle').textContent = t('header.title');
+    document.getElementById('headerSubtitle').textContent = t('header.subtitle');
+    document.getElementById('privacyText').textContent = t('privacy');
+
+    // RTL handling
+    const rtlLangs = ['ar', 'fa', 'prs', 'ps', 'ku'];
+    if (rtlLangs.includes(lang)) {
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.documentElement.setAttribute('lang', lang === 'ku' ? 'ku' : lang);
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+      document.documentElement.setAttribute('lang', lang);
+    }
+  }
+
+  // ============================================================
+  //  WIZARD LOGIC
+  // ============================================================
   function selectRadio(groupName, value, cardEl) {
     state[groupName] = value;
     const parent = cardEl.parentElement;
@@ -614,11 +1556,11 @@
     if (state.setting !== 'brc') {
       return `
         <div class="brc-card">
-          <h3>Field Team Referral Protocol</h3>
-          <p>Escalate to your Field RFL Focal Point or contact the <strong>Bulgarian Red Cross Tracing Service</strong> directly for case handover:</p>
+          <h3>${t('field.title')}</h3>
+          <p>${t('field.desc')}</p>
           <div class="contact-links">
-            <a href="tel:+359888668058">Call BRC Tracing: +359 88 866 80 58</a>
-            <a href="tel:+359884007363">WhatsApp / Viber: +359 88 400 73 63</a>
+            <a href="tel:+359888668058">${t('field.call')}</a>
+            <a href="tel:+359884007363">${t('field.whatsapp')}</a>
           </div>
         </div>
       `;
@@ -626,14 +1568,14 @@
 
     return `
       <div class="brc-card">
-        <h3>Bulgarian Red Cross (BRC) RFL Office &amp; Hotline</h3>
-        <p><strong>Address:</strong> 76 James Bourchier Blvd., 1407 Sofia, Bulgaria</p>
+        <h3>${t('brc.title')}</h3>
+        <p>${t('brc.address')}</p>
         <div class="contact-links">
-          <a href="tel:+359888668058">Primary Tracing Mobile: +359 88 866 80 58</a>
-          <a href="tel:+35924923040">Sofia Office Landline 1: +359 2 4923 040</a>
-          <a href="tel:+35924923039">Sofia Office Landline 2: +359 2 4923 039</a>
-          <a href="tel:+359884007363">WhatsApp / Viber: +359 88 400 73 63</a>
-          <a href="mailto:tracing@redcross.bg">Email: tracing@redcross.bg</a>
+          <a href="tel:+359888668058">${t('brc.phone1')}</a>
+          <a href="tel:+35924923040">${t('brc.phone2')}</a>
+          <a href="tel:+35924923039">${t('brc.phone3')}</a>
+          <a href="tel:+359884007363">${t('brc.whatsapp')}</a>
+          <a href="mailto:tracing@redcross.bg">${t('brc.email')}</a>
         </div>
       </div>
     `;
@@ -645,68 +1587,68 @@
 
     if (tier === 'tier1') {
       const flagLabels = {
-        uasc: 'Unaccompanied/Separated Minor',
-        medical: 'Medical/Elderly Vulnerability',
-        detention: 'Suspected Detention/Kidnapping',
-        conflict: 'Active Conflict/Pushback Separation'
+        uasc: t('tier1.flag.uasc'),
+        medical: t('tier1.flag.medical'),
+        detention: t('tier1.flag.detention'),
+        conflict: t('tier1.flag.conflict')
       };
       const activeFlags = state.vulns.map(v => flagLabels[v]).join(', ');
 
       html = `
         <div class="result-box tier-1">
-          <div class="tier-label">Tier 1 &bull; Critical / Urgent</div>
-          <div class="tier-title">Immediate Specialist Handover</div>
-          <p style="font-size:0.88rem;"><strong>Triggered by:</strong> ${activeFlags}</p>
+          <div class="tier-label">${t('tier1.label')}</div>
+          <div class="tier-title">${t('tier1.title')}</div>
+          <p style="font-size:0.88rem;"><strong>${t('tier1.triggered')}</strong> ${activeFlags}</p>
         </div>
         <ul class="action-list">
-          <li><strong>Do not delay:</strong> Conduct an immediate warm handover (phone or in-person) to a trained RFL Caseworker or Protection Officer.</li>
-          <li><strong>Child Protection:</strong> If an unaccompanied minor is involved, notify Child Protection / State Agency for Child Protection protocols immediately.</li>
-          <li><strong>Safety First:</strong> Do not record sensitive details on unencrypted personal phones.</li>
+          <li>${t('tier1.action1')}</li>
+          <li>${t('tier1.action2')}</li>
+          <li>${t('tier1.action3')}</li>
         </ul>
         ${getBrcBlock()}
       `;
     } else if (tier === 'tier2') {
       html = `
         <div class="result-box tier-2">
-          <div class="tier-label">Tier 2 &bull; Connectivity Support</div>
-          <div class="tier-title">Provide Immediate Phone / Wi-Fi Access</div>
-          <p style="font-size:0.88rem;">No formal tracing case required right now&mdash;the person only lacks communication tools.</p>
+          <div class="tier-label">${t('tier2.label')}</div>
+          <div class="tier-title">${t('tier2.title')}</div>
+          <p style="font-size:0.88rem;">${t('tier2.desc')}</p>
         </div>
         <ul class="action-list">
-          <li><strong>Free Call / Message:</strong> Offer a 3&ndash;5 minute free phone call, WhatsApp/Viber message, or local Wi-Fi access at the service point.</li>
-          <li><strong>Device Charging:</strong> Provide access to a charging station if their own phone battery is dead.</li>
-          <li><strong>Re-evaluate if Needed:</strong> If the family's number is disconnected or unanswered after trying, re-screen as <em>Tier 3 Standard Tracing</em>.</li>
+          <li>${t('tier2.action1')}</li>
+          <li>${t('tier2.action2')}</li>
+          <li>${t('tier2.action3')}</li>
         </ul>
       `;
     } else if (tier === 'tier3') {
       const priorNote = state.prior === 'yes'
-        ? '<li><strong>Existing Case:</strong> Ask if they have an ICRC/Red Cross case reference number so BRC can request a cross-border file transfer in <em>FL Answers</em>.</li>'
-        : '<li><strong>New Tracing File:</strong> Schedule a full RFL intake interview to collect detailed biographical data and signed data-protection consent.</li>';
+        ? `<li>${t('tier3.prior.yes')}</li>`
+        : `<li>${t('tier3.prior.no')}</li>`;
 
       html = `
         <div class="result-box tier-3">
-          <div class="tier-label">Tier 3 &bull; Standard Tracing</div>
-          <div class="tier-title">Schedule Formal RFL Intake</div>
-          <p style="font-size:0.88rem;">Eligible involuntary family separation with stable immediate safety.</p>
+          <div class="tier-label">${t('tier3.label')}</div>
+          <div class="tier-title">${t('tier3.title')}</div>
+          <p style="font-size:0.88rem;">${t('tier3.desc')}</p>
         </div>
         <ul class="action-list">
           ${priorNote}
-          <li><strong>Self-Tracing Check:</strong> Mention the public <em>Red Cross Trace the Face</em> photo gallery for European migration routes.</li>
-          <li><strong>Protect Privacy:</strong> Ensure full intake forms are completed only by authorized RFL staff in a private setting.</li>
+          <li>${t('tier3.action.self')}</li>
+          <li>${t('tier3.action.privacy')}</li>
         </ul>
         ${getBrcBlock()}
       `;
     } else {
       html = `
         <div class="result-box tier-4">
-          <div class="tier-label">Tier 4 &bull; Information &amp; Referral</div>
-          <div class="tier-title">Non-RFL Support / General Guidance</div>
-          <p style="font-size:0.88rem;">Does not meet RFL tracing criteria (voluntary separation, legal/visa matter, or non-family).</p>
+          <div class="tier-label">${t('tier4.label')}</div>
+          <div class="tier-title">${t('tier4.title')}</div>
+          <p style="font-size:0.88rem;">${t('tier4.desc')}</p>
         </div>
         <ul class="action-list">
-          <li><strong>Explain Scope:</strong> Politely explain that Red Cross tracing applies only to involuntary separation of close family members.</li>
-          <li><strong>Legal / Asylum Referrals:</strong> For family reunification visas or residency procedures, refer to the Bulgarian Red Cross Refugee-Migrant Service or legal aid partners (e.g., BHC / FAR).</li>
-          <li><strong>Self-Service Tools:</strong> Share public social media or community group tips if looking for acquaintances.</li>
+          <li>${t('tier4.action1')}</li>
+          <li>${t('tier4.action2')}</li>
+          <li>${t('tier4.action3')}</li>
         </ul>
         ${getBrcBlock()}
       `;
@@ -739,6 +1681,21 @@
 
     goToStep(0);
   }
+
+  // ============================================================
+  //  INIT
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', () => {
+    // Language button listeners
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyLanguage(btn.dataset.lang);
+      });
+    });
+
+    // Set initial language
+    applyLanguage('en');
+  });
 </script>
 </body>
 </html>
