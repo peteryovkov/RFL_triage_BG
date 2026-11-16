@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#c8102e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>RFL Frontline Triage Tool</title>
+  <style>
+    :root {
+      --red: #c8102e;
+      --red-dark: #9b0c23;
+      --red-light: #fef2f2;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --blue: #1d4ed8;
+      --blue-light: #eff6ff;
+      --slate: #334155;
+      --slate-light: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--red);
+      color: #ffffff;
+      padding: 18px 20px;
+    }
+
+    header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    header p {
+      font-size: 0.82rem;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .privacy-banner {
+      background: #fff1f2;
+      border-bottom: 1px solid #fecdd3;
+      color: #881337;
+      font-size: 0.78rem;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #e2e8f0;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--red);
+      width: 16%;
+      transition: width 0.25s ease;
+    }
+
+    main {
+      padding: 20px;
+      flex: 1;
+    }
+
+    .step {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--red);
+      background: var(--red-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .hint {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-card {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fff;
+    }
+
+    .option-card:hover {
+      border-color: #cbd5e1;
+      background: var(--slate-light);
+    }
+
+    .option-card.selected {
+      border-color: var(--red);
+      background: var(--red-light);
+    }
+
+    .option-card input {
+      margin-top: 3px;
+      accent-color: var(--red);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .option-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: block;
+    }
+
+    .option-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--red-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--slate);
+      flex: 0.45;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .result-box {
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-left: 6px solid;
+    }
+
+    .tier-1 {
+      background: var(--red-light);
+      border-color: var(--red);
+    }
+    .tier-1 .tier-label { color: var(--red); }
+
+    .tier-2 {
+      background: var(--blue-light);
+      border-color: var(--blue);
+    }
+    .tier-2 .tier-label { color: var(--blue); }
+
+    .tier-3 {
+      background: var(--amber-light);
+      border-color: var(--amber);
+    }
+    .tier-3 .tier-label { color: #b45309; }
+
+    .tier-4 {
+      background: var(--slate-light);
+      border-color: var(--slate);
+    }
+    .tier-4 .tier-label { color: var(--slate); }
+
+    .tier-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tier-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 4px 0 8px 0;
+    }
+
+    .action-list {
+      padding-left: 18px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .action-list li {
+      margin-bottom: 8px;
+    }
+
+    .brc-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 14px;
+      font-size: 0.86rem;
+    }
+
+    .brc-card h3 {
+      font-size: 0.92rem;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .contact-links a {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .contact-links a:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    footer {
+      text-align: center;
+      padding: 12px 20px 18px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>RFL Frontline Triage Tool</h1>
+    <p>Restoring Family Links Rapid Screening</p>
+  </header>
+
+  <div class="privacy-banner">
+    <span>Data Minimization: Do NOT enter names, IDs, or personal histories.</span>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <main>
+    <!-- STEP 0: Operational Setting & Consent -->
+    <section class="step active" id="step0">
+      <span class="step-badge">Setup &amp; Consent</span>
+      <h2>1. Select Operational Setting</h2>
+      <p class="hint">Choose where this screening is taking place to tailor referral contacts.</p>
+
+      <div class="option-group" id="settingGroup">
+        <label class="option-card selected" onclick="selectRadio('setting', 'brc', this)">
+          <input type="radio" name="setting" value="brc" checked />
+          <div>
+            <span class="option-title">Bulgarian Red Cross Office / Phone</span>
+            <span class="option-desc">Sofia HQ, regional branch, or BRC phone/Viber/WhatsApp intake.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="selectRadio('setting', 'field', this)">
+          <input type="radio" name="setting" value="field" />
+          <div>
+            <span class="option-title">Field / Transit / Border Point</span>
+            <span class="option-desc">Mobile team, Humanitarian Service Point, or reception center.</span>
+          </div>
+        </label>
+      </div>
+
+      <h2>2. Informed Verbal Consent</h2>
+      <p class="hint">Explain: "Red Cross RFL services are free, confidential, neutral, and separate from border or asylum authorities. Do you agree to answer a few quick screening questions?"</p>
+
+      <div class="option-group">
+        <label class="option-card" onclick="toggleConsent(this)">
+          <input type="checkbox" id="consentCheck" />
+          <div>
+            <span class="option-title">Person gives informed consent to proceed</span>
+            <span class="option-desc">Required before continuing screening.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="btnStart" disabled onclick="goToStep(1)">Start Screening &rarr;</button>
+      </div>
+    </section>
+
+    <!-- STEP 1: Eligibility & Relationship -->
+    <section class="step" id="step1">
+      <span class="step-badge">Stage 1 of 4 &bull; Eligibility</span>
+      <h2>Relationship &amp; Separation Check</h2>
+      <p class="hint">Who is the person looking for, and how did contact break?</p>
+
+      <div class="option-group">
+        <label class="option-card" onclick="selectRadio('eligibility', 'eligible', this)">
+          <input type="radio" name="eligibility" value="eligible" />
+          <div>
+            <span class="option-title">Close family member &amp; involuntary loss of contact</span>
+            <span class="option-desc">Spouse, child, parent, sibling, or legal dependent separated by conflict, transit, disaster, or detention.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="selectRadio('eligibility', 'non_eligible', this)">
+          <input type="radio" name="eligibility" value="non_eligible" />
+          <div>
+            <span class="option-title">Voluntary separation, visa/legal query, or non-family</span>
+            <span class="option-desc">Relatives refuse contact, seeking legal family reunification visas, or looking for friends/neighbors.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToStep(0)">&larr; Back</button>
+        <button class="btn-primary" id="btnStep1" disabled onclick="handleStep1()">Continue &rarr;</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: Vulnerability Flags -->
+    <section class="step" id="step2">
+      <span class="step-badge">Stage 2 of 4 &bull; Urgency Check</span>
+      <h2>Critical Vulnerability Flags</h2>
+      <p class="hint">Select all conditions that apply right now (if any):</p>
+
+      <div class="option-group">
+        <label class="option-card" onclick="toggleFlag(this)">
+          <input type="checkbox" name="vuln" value="uasc" />
+          <div>
+            <span class="option-title">Unaccompanied or Separated Child (Under 18)</span>
+            <span class="option-desc">Either the applicant or the missing relative is a minor alone.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="toggleFlag(this)">
+          <input type="checkbox" name="vuln" value="medical" />
+          <div>
+            <span class="option-title">Medical Emergency / Severe Disability / Elderly</span>
+            <span class="option-desc">Life-threatening condition, urgent medication need, or vulnerable dependent.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="toggleFlag(this)">
+          <input type="checkbox" name="vuln" value="detention" />
+          <div>
+            <span class="option-title">Suspected Detention, Arrest, or Kidnapping</span>
+            <span class="option-desc">Person believed held by authorities, border forces, or armed groups.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="toggleFlag(this)">
+          <input type="checkbox" name="vuln" value="conflict" />
+          <div>
+            <span class="option-title">Active Armed Conflict / Shipwreck / Border Pushback</span>
+            <span class="option-desc">Sudden separation during acute life-threatening emergency.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToStep(1)">&larr; Back</button>
+        <button class="btn-primary" onclick="handleStep2()">Continue &rarr;</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Connectivity Check -->
+    <section class="step" id="step3">
+      <span class="step-badge">Stage 3 of 4 &bull; Connectivity</span>
+      <h2>Can they reach their family if given a phone?</h2>
+      <p class="hint">Determine whether this is a technical access barrier or a true tracing need.</p>
+
+      <div class="option-group">
+        <label class="option-card" onclick="selectRadio('connectivity', 'needs_phone', this)">
+          <input type="radio" name="connectivity" value="needs_phone" />
+          <div>
+            <span class="option-title">Yes &mdash; they know the number/account, just lack access</span>
+            <span class="option-desc">Dead battery, lost phone, no SIM/credit, or no Wi-Fi access.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="selectRadio('connectivity', 'lost_contact', this)">
+          <input type="radio" name="connectivity" value="lost_contact" />
+          <div>
+            <span class="option-title">No &mdash; numbers don't work or whereabouts are unknown</span>
+            <span class="option-desc">They have tried calling/messaging or have no working contact details.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToStep(2)">&larr; Back</button>
+        <button class="btn-primary" id="btnStep3" disabled onclick="handleStep3()">Continue &rarr;</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: Context & Prior Registration -->
+    <section class="step" id="step4">
+      <span class="step-badge">Stage 4 of 4 &bull; Case Context</span>
+      <h2>Prior Red Cross / ICRC Registration</h2>
+      <p class="hint">Has a tracing request already been opened in another country or with ICRC?</p>
+
+      <div class="option-group">
+        <label class="option-card" onclick="selectRadio('prior', 'no', this)">
+          <input type="radio" name="prior" value="no" />
+          <div>
+            <span class="option-title">No prior tracing case opened</span>
+            <span class="option-desc">First time requesting Red Cross / Red Crescent RFL assistance.</span>
+          </div>
+        </label>
+        <label class="option-card" onclick="selectRadio('prior', 'yes', this)">
+          <input type="radio" name="prior" value="yes" />
+          <div>
+            <span class="option-title">Yes &mdash; already registered with Red Cross / ICRC</span>
+            <span class="option-desc">Needs follow-up, case update, or transfer to Bulgaria.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToStep(3)">&larr; Back</button>
+        <button class="btn-primary" id="btnStep4" disabled onclick="calculateResult()">View Triage Result &rarr;</button>
+      </div>
+    </section>
+
+    <!-- STEP 5: Result Screen -->
+    <section class="step" id="step5">
+      <span class="step-badge">Triage Outcome</span>
+      <div id="resultContainer"></div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="resetApp()">Clear &amp; Start Next Assessment</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Stateless Triage Aid &bull; No data is saved or transmitted by this page.
+  </footer>
+</div>
+
+<script>
+  const state = {
+    setting: 'brc',
+    eligibility: null,
+    vulns: [],
+    connectivity: null,
+    prior: null
+  };
+
+  function selectRadio(groupName, value, cardEl) {
+    state[groupName] = value;
+    const parent = cardEl.parentElement;
+    parent.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    cardEl.classList.add('selected');
+    cardEl.querySelector('input').checked = true;
+
+    if (groupName === 'eligibility') document.getElementById('btnStep1').disabled = false;
+    if (groupName === 'connectivity') document.getElementById('btnStep3').disabled = false;
+    if (groupName === 'prior') document.getElementById('btnStep4').disabled = false;
+  }
+
+  function toggleConsent(cardEl) {
+    const cb = document.getElementById('consentCheck');
+    setTimeout(() => {
+      cardEl.classList.toggle('selected', cb.checked);
+      document.getElementById('btnStart').disabled = !cb.checked;
+    }, 0);
+  }
+
+  function toggleFlag(cardEl) {
+    const cb = cardEl.querySelector('input');
+    setTimeout(() => {
+      cardEl.classList.toggle('selected', cb.checked);
+      const checked = Array.from(document.querySelectorAll('input[name="vuln"]:checked')).map(i => i.value);
+      state.vulns = checked;
+    }, 0);
+  }
+
+  function goToStep(stepNum) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step' + stepNum).classList.add('active');
+    const progressMap = { 0: '16%', 1: '33%', 2: '50%', 3: '68%', 4: '85%', 5: '100%' };
+    document.getElementById('progressFill').style.width = progressMap[stepNum];
+    window.scrollTo(0, 0);
+  }
+
+  function handleStep1() {
+    if (state.eligibility === 'non_eligible') {
+      renderResult('tier4');
+    } else {
+      goToStep(2);
+    }
+  }
+
+  function handleStep2() {
+    if (state.vulns.length > 0) {
+      renderResult('tier1');
+    } else {
+      goToStep(3);
+    }
+  }
+
+  function handleStep3() {
+    if (state.connectivity === 'needs_phone') {
+      renderResult('tier2');
+    } else {
+      goToStep(4);
+    }
+  }
+
+  function calculateResult() {
+    renderResult('tier3');
+  }
+
+  function getBrcBlock() {
+    if (state.setting !== 'brc') {
+      return `
+        <div class="brc-card">
+          <h3>Field Team Referral Protocol</h3>
+          <p>Escalate to your Field RFL Focal Point or contact the <strong>Bulgarian Red Cross Tracing Service</strong> directly for case handover:</p>
+          <div class="contact-links">
+            <a href="tel:+359888668058">Call BRC Tracing: +359 88 866 80 58</a>
+            <a href="tel:+359884007363">WhatsApp / Viber: +359 88 400 73 63</a>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="brc-card">
+        <h3>Bulgarian Red Cross (BRC) RFL Office &amp; Hotline</h3>
+        <p><strong>Address:</strong> 76 James Bourchier Blvd., 1407 Sofia, Bulgaria</p>
+        <div class="contact-links">
+          <a href="tel:+359888668058">Primary Tracing Mobile: +359 88 866 80 58</a>
+          <a href="tel:+35924923040">Sofia Office Landline 1: +359 2 4923 040</a>
+          <a href="tel:+35924923039">Sofia Office Landline 2: +359 2 4923 039</a>
+          <a href="tel:+359884007363">WhatsApp / Viber: +359 88 400 73 63</a>
+          <a href="mailto:tracing@redcross.bg">Email: tracing@redcross.bg</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderResult(tier) {
+    const container = document.getElementById('resultContainer');
+    let html = '';
+
+    if (tier === 'tier1') {
+      const flagLabels = {
+        uasc: 'Unaccompanied/Separated Minor',
+        medical: 'Medical/Elderly Vulnerability',
+        detention: 'Suspected Detention/Kidnapping',
+        conflict: 'Active Conflict/Pushback Separation'
+      };
+      const activeFlags = state.vulns.map(v => flagLabels[v]).join(', ');
+
+      html = `
+        <div class="result-box tier-1">
+          <div class="tier-label">Tier 1 &bull; Critical / Urgent</div>
+          <div class="tier-title">Immediate Specialist Handover</div>
+          <p style="font-size:0.88rem;"><strong>Triggered by:</strong> ${activeFlags}</p>
+        </div>
+        <ul class="action-list">
+          <li><strong>Do not delay:</strong> Conduct an immediate warm handover (phone or in-person) to a trained RFL Caseworker or Protection Officer.</li>
+          <li><strong>Child Protection:</strong> If an unaccompanied minor is involved, notify Child Protection / State Agency for Child Protection protocols immediately.</li>
+          <li><strong>Safety First:</strong> Do not record sensitive details on unencrypted personal phones.</li>
+        </ul>
+        ${getBrcBlock()}
+      `;
+    } else if (tier === 'tier2') {
+      html = `
+        <div class="result-box tier-2">
+          <div class="tier-label">Tier 2 &bull; Connectivity Support</div>
+          <div class="tier-title">Provide Immediate Phone / Wi-Fi Access</div>
+          <p style="font-size:0.88rem;">No formal tracing case required right now&mdash;the person only lacks communication tools.</p>
+        </div>
+        <ul class="action-list">
+          <li><strong>Free Call / Message:</strong> Offer a 3&ndash;5 minute free phone call, WhatsApp/Viber message, or local Wi-Fi access at the service point.</li>
+          <li><strong>Device Charging:</strong> Provide access to a charging station if their own phone battery is dead.</li>
+          <li><strong>Re-evaluate if Needed:</strong> If the family's number is disconnected or unanswered after trying, re-screen as <em>Tier 3 Standard Tracing</em>.</li>
+        </ul>
+      `;
+    } else if (tier === 'tier3') {
+      const priorNote = state.prior === 'yes'
+        ? '<li><strong>Existing Case:</strong> Ask if they have an ICRC/Red Cross case reference number so BRC can request a cross-border file transfer in <em>FL Answers</em>.</li>'
+        : '<li><strong>New Tracing File:</strong> Schedule a full RFL intake interview to collect detailed biographical data and signed data-protection consent.</li>';
+
+      html = `
+        <div class="result-box tier-3">
+          <div class="tier-label">Tier 3 &bull; Standard Tracing</div>
+          <div class="tier-title">Schedule Formal RFL Intake</div>
+          <p style="font-size:0.88rem;">Eligible involuntary family separation with stable immediate safety.</p>
+        </div>
+        <ul class="action-list">
+          ${priorNote}
+          <li><strong>Self-Tracing Check:</strong> Mention the public <em>Red Cross Trace the Face</em> photo gallery for European migration routes.</li>
+          <li><strong>Protect Privacy:</strong> Ensure full intake forms are completed only by authorized RFL staff in a private setting.</li>
+        </ul>
+        ${getBrcBlock()}
+      `;
+    } else {
+      html = `
+        <div class="result-box tier-4">
+          <div class="tier-label">Tier 4 &bull; Information &amp; Referral</div>
+          <div class="tier-title">Non-RFL Support / General Guidance</div>
+          <p style="font-size:0.88rem;">Does not meet RFL tracing criteria (voluntary separation, legal/visa matter, or non-family).</p>
+        </div>
+        <ul class="action-list">
+          <li><strong>Explain Scope:</strong> Politely explain that Red Cross tracing applies only to involuntary separation of close family members.</li>
+          <li><strong>Legal / Asylum Referrals:</strong> For family reunification visas or residency procedures, refer to the Bulgarian Red Cross Refugee-Migrant Service or legal aid partners (e.g., BHC / FAR).</li>
+          <li><strong>Self-Service Tools:</strong> Share public social media or community group tips if looking for acquaintances.</li>
+        </ul>
+        ${getBrcBlock()}
+      `;
+    }
+
+    container.innerHTML = html;
+    goToStep(5);
+  }
+
+  function resetApp() {
+    state.eligibility = null;
+    state.vulns = [];
+    state.connectivity = null;
+    state.prior = null;
+
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[name="eligibility"], input[name="connectivity"], input[name="prior"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+
+    const activeSettingInput = document.querySelector(`input[name="setting"][value="${state.setting}"]`);
+    if (activeSettingInput) {
+      activeSettingInput.checked = true;
+      activeSettingInput.parentElement.classList.add('selected');
+    }
+
+    document.getElementById('btnStart').disabled = true;
+    document.getElementById('btnStep1').disabled = true;
+    document.getElementById('btnStep3').disabled = true;
+    document.getElementById('btnStep4').disabled = true;
+
+    goToStep(0);
+  }
+</script>
+</body>
+</html>
